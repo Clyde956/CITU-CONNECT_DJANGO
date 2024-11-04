@@ -23,7 +23,7 @@ class User(AbstractUser):
         ('faculty', 'Faculty'),
         ('admin', 'Admin'),
     ])
-    school = models.ForeignKey('School', on_delete=models.CASCADE)
+    school = models.ForeignKey('School', on_delete=models.CASCADE, null=True, blank=True)
     
     groups = models.ManyToManyField(Group, related_name='custom_user_set')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set_permissions')
