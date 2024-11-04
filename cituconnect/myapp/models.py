@@ -11,7 +11,7 @@ class User(AbstractUser):
     lastName = models.CharField(max_length=30)
     role = models.CharField(max_length=20, choices=[
         ('student', 'Student'),
-        ('staff', 'Staff'),
+        ('staff', 'Staff'), 
         ('faculty', 'Faculty'),
         ('admin', 'Admin'),
     ])

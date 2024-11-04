@@ -2,30 +2,79 @@
 <html>
 <head>
     <title>Hello User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f9f9f9;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .post-title {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .post-content {
+            margin: 5px 0;
+        }
+        .post-timestamp {
+            color: #888;
+            font-size: 0.9em;
+        }
+        .post-actions {
+            margin-top: 10px;
+        }
+        .post-actions a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .post-actions a:hover {
+            text-decoration: underline;
+        }
+        .like-button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .like-button:hover {
+            background-color: #0056b3;
+        }
+        .likes-count {
+            margin-left: 10px;
+            color: #555;
+        }
+        .create-post-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .create-post-button:hover {
+            background-color: #218838;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.like-button').click(function() {
-                var postId = $(this).data('post-id');
-                var button = $(this);
-                $.ajax({
-                    url: '/like_post/' + postId + '/',
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    success: function(data) {
-                        if (data.liked) {
-                            button.text('Unlike');
-                        } else {
-                            button.text('Like');
-                        }
-                        button.siblings('.likes-count').text(data.likes_count + ' likes');
-                    }
-                });
-            });
-
-            $('.comment-button').click(function() {
                 var postId = $(this).data('post-id');
                 var commentContent = prompt("Enter your comment:");
                 if (commentContent) {
@@ -50,32 +99,25 @@
 <body>
     <h1>Hello, {{ username }}</h1>
     <h2>Your Posts:</h2>
+    <a href="{% url 'create_post' %}" class="create-post-button">Create Post</a>
     <ul>
         {% for post in posts %}
             <li>
-                {{ post.title }} - {{ post.content }}
-                <a href="{% url 'update_post' post.postId %}">Update</a>
-                <a href="{% url 'delete_post' post.postId %}">Delete</a>
-                <button class="like-button" data-post-id="{{ post.postId }}">
-                    {% if user in post.likes.all %}
-                        Unlike
-                    {% else %}
-                        Like
-                    {% endif %}
-                </button>
-                <span class="likes-count">{{ post.likes.count }} likes</span>
-                <button class="comment-button" data-post-id="{{ post.postId }}">Comment</button>
-                <ul>
-                    {% for comment in post.comments.all %}
-                        <li>
-                            {{ comment.content }} - {{ comment.timestamp }}
-                            <a href="{% url 'update_comment' comment.comment_id %}">Update</a>
-                            <a href="{% url 'delete_comment' comment.comment_id %}">Delete</a>
-                        </li>
-                    {% empty %}
-                        <li>No comments yet.</li>
-                    {% endfor %}
-                </ul>
+                <div class="post-title">{{ post.title }}</div>
+                <div class="post-content">{{ post.content }}</div>
+                <div class="post-timestamp">Posted on: {{ post.timeStamp }}</div>
+                <div class="post-actions">
+                    <a href="{% url 'update_post' post.postId %}">Update</a>
+                    <a href="{% url 'delete_post' post.postId %}">Delete</a>
+                    <button class="like-button" data-post-id="{{ post.postId }}">
+                        {% if user in post.likes.all %}
+                            Unlike
+                        {% else %}
+                            Like
+                        {% endif %}
+                    </button>
+                    <span class="likes-count">{{ post.likes.count }} likes</span>
+                </div>
             </li>
         {% empty %}
             <li>You have no posts yet.</li>
