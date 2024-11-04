@@ -58,6 +58,18 @@
             margin-left: 10px;
             color: #555;
         }
+        .create-post-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .create-post-button:hover {
+            background-color: #218838;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -87,6 +99,7 @@
 <body>
     <h1>Hello, {{ username }}</h1>
     <h2>Your Posts:</h2>
+    <a href="{% url 'create_post' %}" class="create-post-button">Create Post</a>
     <ul>
         {% for post in posts %}
             <li>
