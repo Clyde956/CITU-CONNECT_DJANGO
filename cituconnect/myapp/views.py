@@ -72,8 +72,8 @@ def delete_post(request, post_id):
 
 @login_required
 def hello_user(request):
-    posts = Post.objects.filter(member=request.user)
-    return render(request, 'hello_user.html', {'posts': posts})
+    posts = Post.objects.filter(member=request.user).prefetch_related('comments')
+    return render(request, 'hello_user.html', {'posts': posts, 'username': request.user.username})
 
 @login_required
 def like_post(request, post_id):

@@ -54,6 +54,18 @@
         .like-button:hover {
             background-color: #0056b3;
         }
+        .comment-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-left: 10px;
+        }
+        .comment-button:hover {
+            background-color: #218838;
+        }
         .likes-count {
             margin-left: 10px;
             color: #555;
@@ -70,11 +82,41 @@
         .create-post-button:hover {
             background-color: #218838;
         }
+        .comment {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        .comment-timestamp {
+            color: #888;
+            font-size: 0.8em;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.like-button').click(function() {
+                var postId = $(this).data('post-id');
+                var button = $(this);
+                $.ajax({
+                    url: '/like_post/' + postId + '/',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        if (data.liked) {
+                            button.text('Unlike');
+                        } else {
+                            button.text('Like');
+                        }
+                        button.siblings('.likes-count').text(data.likes_count + ' likes');
+                    }
+                });
+            });
+
+            $('.comment-button').click(function() {
                 var postId = $(this).data('post-id');
                 var commentContent = prompt("Enter your comment:");
                 if (commentContent) {
@@ -88,7 +130,8 @@
                             content: commentContent
                         },
                         success: function(data) {
-                            location.reload();
+                            alert('Comment added successfully!');
+                            location.reload(); // Reload the page to show the new comment
                         }
                     });
                 }
@@ -116,7 +159,16 @@
                             Like
                         {% endif %}
                     </button>
+                    <button class="comment-button" data-post-id="{{ post.postId }}">Comment</button>
                     <span class="likes-count">{{ post.likes.count }} likes</span>
+                </div>
+                <div class="comments">
+                    {% for comment in post.comments.all %}
+                        <div class="comment">
+                            <div>{{ comment.content }}</div>
+                            <div class="comment-timestamp">Commented on: {{ comment.timestamp }}</div>
+                        </div>
+                    {% endfor %}
                 </div>
             </li>
         {% empty %}
