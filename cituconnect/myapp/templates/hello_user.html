@@ -1,0 +1,132 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello User</title>
+</head>
+<body>
+    <h1>Hello, {{ username }}</h1>
+    <h2>Your Posts:</h2>
+    <ul>
+        {% for post in posts %}
+            <li>
+                {{ post.title }} - {{ post.content }}
+                <a href="{% url 'update_post' post.postId %}">Update</a>
+                <a href="{% url 'delete_post' post.postId %}">Delete</a>
+            </li>
+        {% empty %}
+            <li>You have no posts yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>-->
+
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello User</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.like-button').click(function() {
+                var postId = $(this).data('post-id');
+                var button = $(this);
+                $.ajax({
+                    url: '/like_post/' + postId + '/',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        if (data.liked) {
+                            button.text('Unlike');
+                        } else {
+                            button.text('Like');
+                        }
+                        button.siblings('.likes-count').text(data.likes_count + ' likes');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Hello, {{ username }}</h1>
+    <h2>Your Posts:</h2>
+    <ul>
+        {% for post in posts %}
+            <li>
+                {{ post.title }} - {{ post.content }}
+                <a href="{% url 'update_post' post.postId %}">Update</a>
+                <a href="{% url 'delete_post' post.postId %}">Delete</a>
+                <button class="like-button" data-post-id="{{ post.postId }}">
+                    {% if user in post.likes.all %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </button>
+                <span class="likes-count">{{ post.likes.count }} likes</span>
+            </li>
+        {% empty %}
+            <li>You have no posts yet.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'notifications' %}">Notifications</a>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello User</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.like-button').click(function() {
+                var postId = $(this).data('post-id');
+                var button = $(this);
+                $.ajax({
+                    url: '/like_post/' + postId + '/',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        if (data.liked) {
+                            button.text('Unlike');
+                        } else {
+                            button.text('Like');
+                        }
+                        button.siblings('.likes-count').text(data.likes_count + ' likes');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Hello, {{ username }}</h1>
+    <h2>Your Posts:</h2>
+    <ul>
+        {% for post in posts %}
+            <li>
+                {{ post.title }} - {{ post.content }}
+                <a href="{% url 'update_post' post.postId %}">Update</a>
+                <a href="{% url 'delete_post' post.postId %}">Delete</a>
+                <button class="like-button" data-post-id="{{ post.postId }}">
+                    {% if user in post.likes.all %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </button>
+                <span class="likes-count">{{ post.likes.count }} likes</span>
+            </li>
+        {% empty %}
+            <li>You have no posts yet.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'notifications' %}">Notifications</a>
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications</title>
+</head>
+<body>
+    <h1>Notifications</h1>
+    <ul>
+        {% for notification in notifications %}
+            <li>
+                {{ notification.content }} - {{ notification.timeStamp }}
+                {% if not notification.isRead %}
+                    <strong>New</strong>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No notifications yet.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'hello_user' %}">Go to Home</a>
+</body>
+</html>
