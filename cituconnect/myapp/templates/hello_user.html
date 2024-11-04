@@ -5,7 +5,17 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         h1, h2 {
             color: #333;
@@ -17,9 +27,10 @@
         li {
             background: #f9f9f9;
             margin: 10px 0;
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         .post-title {
             font-weight: bold;
@@ -140,42 +151,51 @@
     </script>
 </head>
 <body>
-    <h1>Hello, {{ username }}</h1>
-    <h2>Your Posts:</h2>
-    <a href="{% url 'create_post' %}" class="create-post-button">Create Post</a>
-    <ul>
-        {% for post in posts %}
-            <li>
-                <div class="post-title">{{ post.title }}</div>
-                <div class="post-content">{{ post.content }}</div>
-                <div class="post-timestamp">Posted on: {{ post.timeStamp }}</div>
-                <div class="post-actions">
-                    <a href="{% url 'update_post' post.postId %}">Update</a>
-                    <a href="{% url 'delete_post' post.postId %}">Delete</a>
-                    <button class="like-button" data-post-id="{{ post.postId }}">
-                        {% if user in post.likes.all %}
-                            Unlike
-                        {% else %}
-                            Like
-                        {% endif %}
-                    </button>
-                    <button class="comment-button" data-post-id="{{ post.postId }}">Comment</button>
-                    <span class="likes-count">{{ post.likes.count }} likes</span>
-                </div>
-                <div class="comments">
-                    {% for comment in post.comments.all %}
-                        <div class="comment">
-                            <div>{{ comment.content }}</div>
-                            <div class="comment-timestamp">Commented on: {{ comment.timestamp }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </li>
-        {% empty %}
-            <li>You have no posts yet.</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'notifications' %}">Notifications</a>
-    <a href="{% url 'logout' %}">Logout</a>
+    <div class="container">
+        <h1>Hello, {{ username }}</h1>
+        <h2>Your Posts:</h2>
+        <a href="{% url 'create_post' %}" class="create-post-button">Create Post</a>
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <div class="post-title">{{ post.title }}</div>
+                    <div class="post-content">{{ post.content }}</div>
+                    <div class="post-timestamp">Posted on: {{ post.timeStamp }}</div>
+                    <div class="post-actions">
+                        <a href="{% url 'update_post' post.postId %}">Update</a>
+                        <a href="{% url 'delete_post' post.postId %}">Delete</a>
+                        <button class="like-button" data-post-id="{{ post.postId }}">
+                            {% if user in post.likes.all %}
+                                Unlike
+                            {% else %}
+                                Like
+                            {% endif %}
+                        </button>
+                        <button class="comment-button" data-post-id="{{ post.postId }}">Comment</button>
+                        <span class="likes-count">{{ post.likes.count }} likes</span>
+                    </div>
+                    <div class="comments">
+                        {% for comment in post.comments.all %}
+                            <div class="comment">
+                                <div>{{ comment.content }}</div>
+                                <div class="comment-timestamp">Commented on: {{ comment.timestamp }}</div>
+                                {% if comment.timestamp != comment.last_modified %}
+                                    <div class="comment-timestamp">(Edited: {{ comment.last_modified }})</div>
+                                {% endif %}
+                                <div class="post-actions">
+                                    <a href="{% url 'update_comment' comment.comment_id %}">Update</a>
+                                    <a href="{% url 'delete_comment' comment.comment_id %}">Delete</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </li>
+            {% empty %}
+                <li>You have no posts yet.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'notifications' %}">Notifications</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
 </body>
 </html>

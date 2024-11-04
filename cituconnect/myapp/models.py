@@ -11,7 +11,7 @@ class User(AbstractUser):
     lastName = models.CharField(max_length=30)
     role = models.CharField(max_length=20, choices=[
         ('student', 'Student'),
-        ('staff', 'Staff'), 
+        ('staff', 'Staff'),
         ('faculty', 'Faculty'),
         ('admin', 'Admin'),
     ])
@@ -46,6 +46,7 @@ class Comment(models.Model):
     comment_id = models.AutoField(primary_key=True)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     member = models.ForeignKey(User, on_delete=models.CASCADE)
 

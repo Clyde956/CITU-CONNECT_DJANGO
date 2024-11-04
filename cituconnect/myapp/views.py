@@ -115,7 +115,7 @@ def update_comment(request, comment_id):
     if request.method == 'POST':
         content = request.POST.get('content')
         comment.content = content
-        comment.save()
+        comment.save()  # This will automatically update the last_modified field
         return redirect('hello_user')
     return render(request, 'update_comment.html', {'comment': comment})
 
