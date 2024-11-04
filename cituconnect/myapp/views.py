@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, PostForm
-from .models import Notification, Post
 from django.http import JsonResponse
+from .forms import CustomUserCreationForm, PostForm
+from .models import Notification, Post, Comment
 
 def register(request):
     if request.method == 'POST':
@@ -11,9 +11,9 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('create_post')  # Redirect to create post page
+            return redirect('create_post')
         else:
-            print(form.errors)  # Print form errors to the console for debugging
+            print(form.errors)
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -25,7 +25,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            user_posts = Post.objects.filter(member=user)  # Query posts created by the user
+            user_posts = Post.objects.filter(member=user)
             return render(request, 'hello_user.html', {'username': user.username, 'posts': user_posts})
         else:
             return render(request, 'registration/login.html', {'error': 'Invalid username or password'})
@@ -37,9 +37,9 @@ def create_post(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.member = request.user._wrapped if hasattr(request.user, '_wrapped') else request.user  # Resolve SimpleLazyObject
+            post.member = request.user._wrapped if hasattr(request.user, '_wrapped') else request.user
             post.save()
-            return redirect('success')  # Redirect to a success page
+            return redirect('success')
     else:
         form = PostForm()
     return render(request, 'create_post.html', {'form': form})
@@ -49,7 +49,6 @@ def home(request):
 
 def success(request):
     return render(request, 'success.html')
-
 
 @login_required
 def update_post(request, post_id):
@@ -81,15 +80,12 @@ def like_post(request, post_id):
     post = get_object_or_404(Post, postId=post_id)
     user = request.user
 
-    # Logic to like the post (assuming you have a ManyToManyField for likes)
     if user in post.likes.all():
         post.likes.remove(user)
         liked = False
     else:
         post.likes.add(user)
         liked = True
-
-        # Create a notification
         content = f"{user.username} liked your post: {post.content[:20]}"
         Notification.objects.create(content=content, recipient=post.member)
 
@@ -104,3 +100,29 @@ def notifications(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def add_comment(request, post_id):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        post = get_object_or_404(Post, postId=post_id)
+        Comment.objects.create(content=content, post=post, member=request.user)
+        return JsonResponse({'status': 'success'})
+
+@login_required
+def update_comment(request, comment_id):
+    comment = get_object_or_404(Comment, comment_id=comment_id, member=request.user)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        comment.content = content
+        comment.save()
+        return redirect('hello_user')
+    return render(request, 'update_comment.html', {'comment': comment})
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, comment_id=comment_id, member=request.user)
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('hello_user')
+    return render(request, 'delete_comment.html', {'comment': comment})

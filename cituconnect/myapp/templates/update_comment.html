@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Comment</title>
+</head>
+<body>
+    <h1>Update Comment</h1>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content">{{ comment.content }}</textarea>
+        <button type="submit">Update</button>
+    </form>
+    <a href="{% url 'hello_user' %}">Cancel</a>
+</body>
+</html>
