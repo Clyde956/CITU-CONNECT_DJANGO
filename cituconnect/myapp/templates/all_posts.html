@@ -213,9 +213,7 @@
             $('.update-button').click(function() {
                 var commentId = $(this).data('comment-id');
                 var commentContent = $(this).closest('.comment').find('.comment-content').text();
-                var commentTimestamp = $(this).closest('.comment').find('.comment-timestamp').text();
                 $('#updateCommentModal').find('textarea').val(commentContent);
-                $('#updateCommentModal').find('.comment-timestamp').text(commentTimestamp);
                 $('#updateCommentModal').data('comment-id', commentId).show();
             });
 
@@ -278,7 +276,7 @@
                 <p>Posted by: {% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</p>
                 <p>Posted on: {{ post.timeStamp }}</p>
                 <div class="post-actions">
-                    <a href="{% url 'like_post' post.postId %}" class="like-button" data-post-id="{{ post.postId }}">
+                    <a href="javascript:void(0);" class="like-button" data-post-id="{{ post.postId }}">
                         {% if user in post.likes.all %}
                             Unlike
                         {% else %}
