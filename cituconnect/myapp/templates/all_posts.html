@@ -1,0 +1,156 @@
+<!-- cituconnect/myapp/templates/all_posts.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            border-bottom: #77aaff 3px solid;
+        }
+        header h1 {
+            text-align: center;
+            margin: 0;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+            text-align: center;
+        }
+        header ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        header ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        header ul li a:hover {
+            text-decoration: underline;
+        }
+        .post {
+            background: #fff;
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .post p {
+            margin: 10px 0;
+        }
+        .post-actions {
+            display: flex;
+            align-items: center;
+        }
+        .post-actions a {
+            background: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .post-actions a:hover {
+            background: #0056b3;
+        }
+        .likes-count {
+            font-weight: bold;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comment {
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .comment p {
+            margin: 5px 0;
+        }
+        form {
+            margin-top: 20px;
+        }
+        form input[type="text"] {
+            width: calc(100% - 110px);
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        form button {
+            padding: 10px 20px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>All Posts</h1>
+            <ul>
+                <li><a href="{% url 'my_posts' %}">My Posts</a></li>
+                <li><a href="{% url 'notifications' %}">Notifications</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="container">
+        {% for post in posts %}
+            <div class="post">
+                <p>{{ post.content }}</p>
+                <p>Posted by: {{ post.member.username }}</p>
+                <p>Posted on: {{ post.timeStamp }}</p>
+                <div class="post-actions">
+                    <a href="{% url 'like_post' post.postId %}">
+                        {% if user in post.likes.all %}
+                            Unlike
+                        {% else %}
+                            Like
+                        {% endif %}
+                    </a>
+                    <span class="likes-count">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</span>
+                </div>
+                <form action="{% url 'comment_post' post.postId %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="content" placeholder="Add a comment">
+                    <button type="submit">Comment</button>
+                </form>
+                <div class="comments">
+                    {% for comment in post.comments.all %}
+                        <div class="comment">
+                            <p>{{ comment.content }}</p>
+                            <p>Commented by: {{ comment.member.username }}</p>
+                            <p>Commented on: {{ comment.timestamp }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

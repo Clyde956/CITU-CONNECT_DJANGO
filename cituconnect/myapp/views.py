@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -26,7 +28,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             user_posts = Post.objects.filter(member=user)
-            return render(request, 'hello_user.html', {'username': user.username, 'posts': user_posts})
+            return render(request, 'all_posts.html', {'username': user.username, 'posts': user_posts})
         else:
             return render(request, 'registration/login.html', {'error': 'Invalid username or password'})
     return render(request, 'registration/login.html')
@@ -34,15 +36,11 @@ def login_view(request):
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.member = request.user._wrapped if hasattr(request.user, '_wrapped') else request.user
-            post.save()
-            return redirect('success')
-    else:
-        form = PostForm()
-    return render(request, 'create_post.html', {'form': form})
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        post = Post.objects.create(title=title, content=content, member=request.user)
+        return redirect('all_posts')
+    return render(request, 'create_post.html')
 
 def home(request):
     return render(request, 'home.html')
@@ -76,6 +74,11 @@ def hello_user(request):
     return render(request, 'hello_user.html', {'posts': posts, 'username': request.user.username})
 
 @login_required
+def my_posts_view(request):
+    posts = Post.objects.filter(member=request.user)
+    return render(request, 'hello_user.html', {'posts': posts})
+
+@login_required
 def like_post(request, post_id):
     post = get_object_or_404(Post, postId=post_id)
     user = request.user
@@ -106,7 +109,13 @@ def add_comment(request, post_id):
     if request.method == 'POST':
         content = request.POST.get('content')
         post = get_object_or_404(Post, postId=post_id)
-        Comment.objects.create(content=content, post=post, member=request.user)
+        comment = Comment.objects.create(content=content, post=post, member=request.user)
+        
+        # Create a notification for the post owner if the commenter is not the post owner
+        if post.member != request.user:
+            notification_content = f"{request.user.username} commented on your post: {post.content[:20]}"
+            Notification.objects.create(content=notification_content, recipient=post.member)
+        
         return JsonResponse({'status': 'success'})
 
 @login_required
@@ -126,3 +135,50 @@ def delete_comment(request, comment_id):
         comment.delete()
         return redirect('hello_user')
     return render(request, 'delete_comment.html', {'comment': comment})
+
+#@login_required
+#def get_all_posts_by_registered_users():
+#   # Assuming 'member' is a ForeignKey to the User model in the Post model
+#    posts = Post.objects.filter(member__is_active=True)
+#    return posts
+
+@login_required
+def all_posts_view(request):
+    all_posts = Post.objects.all()
+    return render(request, 'all_posts.html', {'posts': all_posts})
+    #posts = Post.objects.filter(member__is_active=True)  # Fetch all posts by active users
+    #print(len(posts))  # Debugging: Print the posts to the console
+    #return render(request, 'all_posts.html', {'posts': posts})
+
+@login_required
+def notifications_view(request):
+    notifications = Notification.objects.filter(recipient=request.user)
+    return render(request, 'notifications.html', {'notifications': notifications})
+
+@login_required
+@login_required
+def like_post_view(request, post_id):
+    post = get_object_or_404(Post, postId=post_id)
+    if request.user not in post.likes.all():
+        post.likes.add(request.user)
+        # Create a notification for the post owner if the liker is not the owner
+        if post.member != request.user:
+            notification_content = f"{request.user.username} liked your post: {post.content[:20]}"
+            Notification.objects.create(content=notification_content, recipient=post.member)
+    else:
+        post.likes.remove(request.user)
+    return redirect('all_posts')
+
+@login_required
+@login_required
+def comment_post_view(request, post_id):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        post = get_object_or_404(Post, postId=post_id)
+        comment = Comment.objects.create(content=content, post=post, member=request.user)
+        # Create a notification for the post owner if the commenter is not the owner
+        if post.member != request.user:
+            notification_content = f"{request.user.username} commented on your post: {post.content}"
+            Notification.objects.create(content=notification_content, recipient=post.member)
+        return redirect('all_posts')
+    return redirect('all_posts')

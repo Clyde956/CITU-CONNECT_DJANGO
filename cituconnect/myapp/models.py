@@ -29,7 +29,7 @@ class Category(models.Model):
 class Post(models.Model):
     postId = models.AutoField(primary_key=True)
     content = models.TextField()
-    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
     timeStamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, default='pending')
