@@ -13,7 +13,6 @@ class User(AbstractUser):
         ('student', 'Student'),
         ('staff', 'Staff'),
         ('faculty', 'Faculty'),
-        ('admin', 'Admin'),
     ])
     school = models.ForeignKey('School', on_delete=models.CASCADE, null=True, blank=True)
     groups = models.ManyToManyField(Group, related_name='custom_user_set')
