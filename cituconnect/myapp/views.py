@@ -36,11 +36,15 @@ def login_view(request):
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        post = Post.objects.create(title=title, content=content, member=request.user)
-        return redirect('all_posts')
-    return render(request, 'create_post.html')
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.member = request.user
+            post.save()
+            return redirect('all_posts')
+    else:
+        form = PostForm()
+    return render(request, 'create_post.html', {'form': form})
 
 def home(request):
     return render(request, 'home.html')

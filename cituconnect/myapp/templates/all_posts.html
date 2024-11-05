@@ -123,7 +123,7 @@
         {% for post in posts %}
             <div class="post">
                 <p>{{ post.content }}</p>
-                <p>Posted by: {{ post.member.username }}</p>
+                <p>Posted by: {% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</p>
                 <p>Posted on: {{ post.timeStamp }}</p>
                 <div class="post-actions">
                     <a href="{% url 'like_post' post.postId %}">
