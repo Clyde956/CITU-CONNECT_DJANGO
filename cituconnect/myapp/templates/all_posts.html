@@ -294,7 +294,8 @@
                     {% for comment in post.comments.all %}
                         <div class="comment">
                             <p class="comment-content">{{ comment.content }}</p>
-                            <p>Commented by: {{ comment.member.username }}</p>
+                            <br>
+                            <p>Commented by: {{ comment.member.username }}</p> 
                             <p class="comment-timestamp">Commented on: {{ comment.timestamp }}</p>
                             {% if comment.timestamp != comment.last_modified %}
                                 <p class="comment-timestamp">(Edited: {{ comment.last_modified }})</p>
