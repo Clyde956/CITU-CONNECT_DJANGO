@@ -304,8 +304,10 @@
                                 <p class="comment-timestamp">(Edited: {{ comment.last_modified }})</p>
                             {% endif %}
                             <div class="comment-actions">
-                                <a href="javascript:void(0);" class="update-button" data-comment-id="{{ comment.comment_id }}">Update</a>
-                                <a href="javascript:void(0);" class="delete-button" data-comment-id="{{ comment.comment_id }}">Delete</a>
+                                {% if comment.member == user %}
+                                    <a href="javascript:void(0);" class="update-button" data-comment-id="{{ comment.comment_id }}">Update</a>
+                                    <a href="javascript:void(0);" class="delete-button" data-comment-id="{{ comment.comment_id }}">Delete</a>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}
