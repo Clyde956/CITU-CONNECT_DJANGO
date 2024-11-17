@@ -158,9 +158,15 @@
         <ul>
             {% for post in posts %}
                 <li>
-                    <div class="post-title">{{ post.title }}</div>
-                    <div class="post-content">{{ post.content }}</div>
-                    <div class="post-timestamp">Posted on: {{ post.timeStamp }}</div>
+                    <div style="font-size: 14px;">{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</div>
+                    <div style="font-size: 12px;">{{ post.timeStamp }}</div>
+                    <br>
+                    <div style="font-size: 20px;"><b>{{ post.content }}</b></div>
+                    <br>
+                    <div style="font-size: 14px;">Priority Level: {{ post.priorityLevel }}</div>
+                    <div style="font-size: 14px;">Category: {{ post.categoryId.name }}</div>
+                    <div style="font-size: 14px;">Status: {{ post.status }}</div>
+                    <br>
                     <div class="post-actions">
                         <a href="{% url 'update_post' post.postId %}">Update</a>
                         <a href="{% url 'delete_post' post.postId %}">Delete</a>

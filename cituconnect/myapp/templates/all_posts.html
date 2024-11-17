@@ -348,9 +348,15 @@
     <div class="container">
         {% for post in posts %}
             <div class="post">
-                <p>{{ post.content }}</p>
-                <p>Posted by: {% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</p>
-                <p>Posted on: {{ post.timeStamp }}</p>
+                <p style="font-size: 14px;">{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</p>
+                <p style="font-size: 12px;">{{ post.timeStamp }}</p>
+                <br>
+                <p style="font-size: 20px;">"{{ post.content }}"</p>
+                <br>
+                <p style="font-size: 14px;">priority level: {{ post.priorityLevel }}</p>
+                <p style="font-size: 14px;">category: {{ post.categoryId.name}}</p>
+                <p style="font-size: 14px;">status: {{ post.status }}</p>
+                <br>
                 <div class="post-actions">
                     <a href="javascript:void(0);" class="like-button {% if user in post.likes.all %}active{% endif %}" data-post-id="{{ post.postId }}">Like</a>
                     <a href="javascript:void(0);" class="dislike-button {% if user in post.dislikes.all %}active{% endif %}" data-post-id="{{ post.postId }}">Dislike</a>
