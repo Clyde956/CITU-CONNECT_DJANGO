@@ -1,13 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | Home Page</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            border: solid;;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #fdf6e3; /* Light beige for contrast */
+            color: #3d0000; /* Deep maroon for text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+ 
+        header {
+            width: 100%;
+            background-color: #800000; /* Maroon */
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+ 
+        header h1 {
+            color: #ffd700; /* Gold */
+            margin-left: 20px;
+            font-size: 24px;
+        }
+ 
+        header nav {
+            margin-right: 20px;
+        }
+ 
+        header nav a {
+            text-decoration: none;
+            color: #ffd700; /* Gold */
+            background-color: #800000; /* Maroon */
+            border: 2px solid #ffd700;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+ 
+        header nav a:hover {
+            background-color: #ffd700; /* Gold */
+            color: #800000; /* Maroon */
+        }
+ 
+        main {
+            text-align: center;
+            margin-top: 50px;
+        }
+ 
+        main h1 {
+            font-size: 36px;
+            color: #800000; /* Maroon */
+        }
+ 
+        main p {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #3d0000; /* Deep maroon for content */
+        }
+ 
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #800000; /* Maroon */
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Home Page</h1>
-    <p>
-        <a href="{% url 'login' %}">Login</a> or 
-        <a href="{% url 'register' %}">Register</a> if you are new.
-    </p>
+    <header>
+        <h1>Welcome to Our Website</h1>
+        <nav>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        </nav>
+    </header>
+    <main>
+        <h1>Welcome to the Home Page</h1>
+        <p>
+            Explore our features by logging in or registering as a new user.
+        </p>
+    </main>
+    <footer>
+        &copy; 2024 Your Website Name. All rights reserved.
+    </footer>
 </body>
 </html>
