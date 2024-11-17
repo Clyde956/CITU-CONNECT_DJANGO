@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm, PostForm
 from .models import Notification, Post, Comment
 
@@ -137,8 +138,10 @@ def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, comment_id=comment_id, member=request.user)
     if request.method == 'POST':
         comment.delete()
-        return redirect('hello_user')
-    return render(request, 'delete_comment.html', {'comment': comment})
+        #return redirect('hello_user')
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
+    #return render(request, 'delete_comment.html', {'comment': comment})
 
 #@login_required
 #def get_all_posts_by_registered_users():
@@ -159,21 +162,61 @@ def notifications_view(request):
     notifications = Notification.objects.filter(recipient=request.user)
     return render(request, 'notifications.html', {'notifications': notifications})
 
-@login_required
+@csrf_exempt
 @login_required
 def like_post_view(request, post_id):
     post = get_object_or_404(Post, postId=post_id)
-    if request.user not in post.likes.all():
-        post.likes.add(request.user)
-        # Create a notification for the post owner if the liker is not the owner
-        if post.member != request.user:
-            notification_content = f"{request.user.username} liked your post: {post.content[:20]}"
-            Notification.objects.create(content=notification_content, recipient=post.member)
-    else:
-        post.likes.remove(request.user)
-    return redirect('all_posts')
+    action = request.POST.get('action')
+    liked = False
+    disliked = False
 
-@login_required
+    if action == 'like':
+        if request.user in post.dislikes.all():
+            post.dislikes.remove(request.user)
+            disliked = False
+        if request.user not in post.likes.all():
+            post.likes.add(request.user)
+            liked = True
+            if post.member != request.user:
+                notification_content = f"{request.user.username} liked your post: {post.content[:20]}"
+                Notification.objects.create(content=notification_content, recipient=post.member)
+        else:
+            post.likes.remove(request.user)
+            liked = False
+    elif action == 'dislike':
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+            liked = False
+        if request.user not in post.dislikes.all():
+            post.dislikes.add(request.user)
+            disliked = True
+            if post.member != request.user:
+                notification_content = f"{request.user.username} disliked your post: {post.content[:20]}"
+                Notification.objects.create(content=notification_content, recipient=post.member)
+        else:
+            post.dislikes.remove(request.user)
+            disliked = False
+
+    return JsonResponse({
+        'liked': liked,
+        'disliked': disliked,
+        'likes_count': post.likes.count(),
+        'dislikes_count': post.dislikes.count()
+    })
+
+#@csrf_exempt
+#@login_required
+#def dislike_post_view(request, post_id):
+#    post = get_object_or_404(Post, postId=post_id)
+#    disliked = False
+#    if request.user in post.dislikes.all():
+#        post.dislikes.remove(request.user)
+#    else:
+#        post.dislikes.add(request.user)
+#        disliked = True
+#    return JsonResponse({'disliked': disliked, 'dislikes_count': post.dislikes.count()})
+
+
 @login_required
 def comment_post_view(request, post_id):
     if request.method == 'POST':
@@ -182,7 +225,7 @@ def comment_post_view(request, post_id):
         comment = Comment.objects.create(content=content, post=post, member=request.user)
         # Create a notification for the post owner if the commenter is not the owner
         if post.member != request.user:
-            notification_content = f"{request.user.username} commented on your post: {post.content}"
+            notification_content = f"{request.user.username} commented on your post: {post.content[:20]}"
             Notification.objects.create(content=notification_content, recipient=post.member)
-        return redirect('all_posts')
-    return redirect('all_posts')
+        return JsonResponse({'status': 'success', 'comment_id': comment.comment_id})
+    return JsonResponse({'status': 'error'})
