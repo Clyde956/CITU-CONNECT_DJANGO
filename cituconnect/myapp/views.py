@@ -123,15 +123,17 @@ def add_comment(request, post_id):
         
         return JsonResponse({'status': 'success'})
 
+@csrf_exempt
 @login_required
 def update_comment(request, comment_id):
-    comment = get_object_or_404(Comment, comment_id=comment_id, member=request.user)
     if request.method == 'POST':
-        content = request.POST.get('content')
-        comment.content = content
-        comment.save()  # This will automatically update the last_modified field
-        return redirect('hello_user')
-    return render(request, 'update_comment.html', {'comment': comment})
+        comment = get_object_or_404(Comment, comment_id=comment_id, member=request.user)
+        new_content = request.POST.get('content')
+        if new_content:
+            comment.content = new_content
+            comment.save()
+            return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
 
 @login_required
 def delete_comment(request, comment_id):
