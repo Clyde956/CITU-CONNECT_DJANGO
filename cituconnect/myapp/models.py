@@ -45,10 +45,10 @@ class Post(models.Model):
 class Comment(models.Model):
     comment_id = models.AutoField(primary_key=True)
     content = models.TextField()
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    member = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
