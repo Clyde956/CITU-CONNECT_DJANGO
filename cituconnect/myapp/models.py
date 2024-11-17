@@ -30,6 +30,7 @@ class Post(models.Model):
     content = models.TextField()
     member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='disliked_posts', blank=True)
     timeStamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, default='pending')
     priorityLevel = models.CharField(max_length=10, choices=[

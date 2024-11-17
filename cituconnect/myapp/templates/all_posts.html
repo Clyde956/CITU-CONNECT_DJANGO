@@ -67,8 +67,9 @@
         .post-actions a:hover {
             background: #0056b3;
         }
-        .likes-count {
+        .likes-count, .dislikes-count {
             font-weight: bold;
+            margin-right: 10px;
         }
         .comments {
             margin-top: 20px;
@@ -166,12 +167,19 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .like-button.active {
+            background: #007bff;
+        }
+        .dislike-button.active {
+            background: #dc3545;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.like-button').click(function() {
+            $('.like-button, .dislike-button').click(function() {
                 var postId = $(this).data('post-id');
+                var action = $(this).hasClass('like-button') ? 'like' : 'dislike';
                 var button = $(this);
                 $.ajax({
                     url: '/like_post/' + postId + '/',
@@ -179,13 +187,24 @@
                     headers: {
                         'X-CSRFToken': '{{ csrf_token }}'
                     },
+                    data: {
+                        action: action
+                    },
                     success: function(data) {
                         if (data.liked) {
                             button.text('Unlike');
+                            button.addClass('active');
+                            button.siblings('.dislike-button').text('Dislike').removeClass('active');
+                        } else if (data.disliked) {
+                            button.text('Undislike');
+                            button.addClass('active');
+                            button.siblings('.like-button').text('Like').removeClass('active');
                         } else {
-                            button.text('Like');
+                            button.text(action.charAt(0).toUpperCase() + action.slice(1));
+                            button.removeClass('active');
                         }
-                        button.siblings('.likes-count').text(data.likes_count + ' likes');
+                        button.siblings('.likes-count').text(data.likes_count + ' like' + (data.likes_count !== 1 ? 's' : ''));
+                        button.siblings('.dislikes-count').text(data.dislikes_count + ' dislike' + (data.dislikes_count !== 1 ? 's' : ''));
                     }
                 });
             });
@@ -204,7 +223,24 @@
                             content: commentContent
                         },
                         success: function(data) {
-                            location.reload();
+                            if (data.status === 'success') {
+                                alert('Comment successfully added.');
+                                // Dynamically add the new comment to the DOM
+                                var newComment = `
+                                    <div class="comment">
+                                        <p class="comment-content">${commentContent}</p>
+                                        <p>Commented by: {{ user.username }}</p>
+                                        <p class="comment-timestamp">Just now</p>
+                                        <div class="comment-actions">
+                                            <a href="javascript:void(0);" class="update-button" data-comment-id="${data.comment_id}">Update</a>
+                                            <a href="javascript:void(0);" class="delete-button" data-comment-id="${data.comment_id}">Delete</a>
+                                        </div>
+                                    </div>
+                                `;
+                                $(`[data-post-id="${postId}"]`).closest('.post').find('.comments').append(newComment);
+                            } else {
+                                alert('Error adding comment.');
+                            }
                         }
                     });
                 }
@@ -219,6 +255,7 @@
 
             $('.delete-button').click(function() {
                 var commentId = $(this).data('comment-id');
+                var commentElement = $(this).closest('.comment');
                 if (confirm("Are you sure you want to delete this comment?")) {
                     $.ajax({
                         url: '/delete_comment/' + commentId + '/',
@@ -227,7 +264,11 @@
                             'X-CSRFToken': '{{ csrf_token }}'
                         },
                         success: function(data) {
-                            location.reload();
+                            if (data.status === 'success') {
+                                commentElement.remove();
+                            } else {
+                                alert('Error deleting comment.');
+                            }
                         }
                     });
                 }
@@ -276,14 +317,10 @@
                 <p>Posted by: {% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</p>
                 <p>Posted on: {{ post.timeStamp }}</p>
                 <div class="post-actions">
-                    <a href="javascript:void(0);" class="like-button" data-post-id="{{ post.postId }}">
-                        {% if user in post.likes.all %}
-                            Unlike
-                        {% else %}
-                            Like
-                        {% endif %}
-                    </a>
+                    <a href="javascript:void(0);" class="like-button {% if user in post.likes.all %}active{% endif %}" data-post-id="{{ post.postId }}">Like</a>
+                    <a href="javascript:void(0);" class="dislike-button {% if user in post.dislikes.all %}active{% endif %}" data-post-id="{{ post.postId }}">Dislike</a>
                     <span class="likes-count">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</span>
+                    <span class="dislikes-count">{{ post.dislikes.count }} dislike{{ post.dislikes.count|pluralize }}</span>
                 </div>
                 <form action="{% url 'comment_post' post.postId %}" method="post">
                     {% csrf_token %}
