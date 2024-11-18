@@ -189,8 +189,10 @@
                                     <div class="comment-timestamp">(Edited: {{ comment.last_modified }})</div>
                                 {% endif %}
                                 <div class="post-actions">
-                                    <a href="{% url 'update_comment' comment.comment_id %}">Update</a>
-                                    <a href="{% url 'delete_comment' comment.comment_id %}">Delete</a>
+                                    {% if comment.member == user %}
+                                        <a href="{% url 'update_comment' comment.comment_id %}">Update</a>
+                                        <a href="{% url 'delete_comment' comment.comment_id %}">Delete</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}
