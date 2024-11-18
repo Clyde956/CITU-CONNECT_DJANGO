@@ -151,9 +151,9 @@
         <h2 class="login-title">Log In</h2>
         <p>Enter your details to log in to your account.</p>
         <div class="login-form">
-            <form method="POST">
+            <form method="POST" action="{% url 'login' %}>
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Enter your username/email" required>
+                <input type="text" name="username" placeholder="Enter your username/email"  value="{{ next }} required>
                 <input type="password" name="password" placeholder="Enter your password" required>
                 <button type="submit">Log In</button>
             </form>

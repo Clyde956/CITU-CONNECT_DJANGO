@@ -28,11 +28,12 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            user_posts = Post.objects.filter(member=user)
-            return render(request, 'all_posts.html', {'username': user.username, 'posts': user_posts})
+            next_url = request.POST.get('next', 'all_posts')  # Default to 'all_posts' if 'next' is not provided
+            return redirect(next_url)
         else:
             return render(request, 'registration/login.html', {'error': 'Invalid username or password'})
-    return render(request, 'registration/login.html')
+    next_url = request.GET.get('next', 'all_posts')  # Default to 'all_posts' if 'next' is not provided
+    return render(request, 'registration/login.html', {'next': next_url})
 
 @login_required
 def create_post(request):
@@ -75,12 +76,12 @@ def delete_post(request, post_id):
 
 @login_required
 def hello_user(request):
-    posts = Post.objects.filter(member=request.user).prefetch_related('comments')
+    posts = Post.objects.filter(member=request.user).order_by('-timeStamp').prefetch_related('comments')
     return render(request, 'hello_user.html', {'posts': posts, 'username': request.user.username})
 
 @login_required
 def my_posts_view(request):
-    posts = Post.objects.filter(member=request.user)
+    posts = Post.objects.filter(member=request.user).order_by('-timeStamp')
     return render(request, 'hello_user.html', {'posts': posts})
 
 @login_required
@@ -153,8 +154,8 @@ def delete_comment(request, comment_id):
 
 @login_required
 def all_posts_view(request):
-    all_posts = Post.objects.all()
-    return render(request, 'all_posts.html', {'posts': all_posts})
+    all_posts = Post.objects.all().order_by('-timeStamp')  # Order posts by timestamp in descending order
+    return render(request, 'all_posts.html', {'posts': all_posts, 'username': request.user.username})
     #posts = Post.objects.filter(member__is_active=True)  # Fetch all posts by active users
     #print(len(posts))  # Debugging: Print the posts to the console
     #return render(request, 'all_posts.html', {'posts': posts})
