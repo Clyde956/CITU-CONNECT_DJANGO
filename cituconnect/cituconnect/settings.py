@@ -124,3 +124,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Add this line at the end of the file
+LOGIN_REDIRECT_URL = 'all_posts'  # or the name of the URL pattern you want to redirect to
