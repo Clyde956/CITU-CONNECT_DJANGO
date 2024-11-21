@@ -102,7 +102,7 @@ def like_post(request, post_id):
 
 @login_required
 def notifications(request):
-    notifications = request.user.notifications.all()
+    notifications = request.user.notifications.all().order_by('-timeStamp')
     return render(request, 'notifications.html', {'notifications': notifications})
 
 @login_required

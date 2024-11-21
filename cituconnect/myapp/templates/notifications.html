@@ -75,6 +75,7 @@
             {% for notification in notifications %}
                 <div class="notification">
                     <p><b>{{ notification.content }}</b></p>
+                    <br>
                     <p class="notification-time">Received on: {{ notification.timeStamp }}</p>
                 </div>
             {% endfor %}

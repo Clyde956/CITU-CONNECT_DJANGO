@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -212,14 +213,6 @@
             background: #218838;
         }
 
-        .like-button.active {
-            background: #007bff;
-        }
-
-        .dislike-button.active {
-            background: #dc3545;
-        }
-
         .popup {
             display: none;
             position: fixed;
@@ -310,6 +303,20 @@
         .comment-form input {
             margin-right: 10px;
         }
+
+        .like-button, .dislike-button {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .like-button.active {
+            content: url("{% static 'active_like.png' %}");
+        }
+
+        .dislike-button.active {
+            content: url("{% static 'active_dislike.png' %}");
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -318,8 +325,11 @@
                 var postId = $(this).data('post-id');
                 var action = $(this).hasClass('like-button') ? 'like' : 'dislike';
                 var button = $(this);
+
+                console.log('Button clicked:', action, 'Post ID:', postId);
+
                 $.ajax({
-                    url: '/like_post/' + postId + '/',
+                    url: '/like_post_view/' + postId + '/',
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': '{{ csrf_token }}'
@@ -328,20 +338,42 @@
                         action: action
                     },
                     success: function(data) {
+                        console.log('Response data:', data);
+
+                        var votesContainer = button.closest('.votes');
+                        var likeButton = votesContainer.find('.like-button');
+                        var dislikeButton = votesContainer.find('.dislike-button');
+
                         if (data.liked) {
-                            button.text('Unlike');
-                            button.addClass('active');
-                            button.siblings('.dislike-button').text('Dislike').removeClass('active');
+                            console.log('Liked: Updating dislike button and like button');
+                            dislikeButton.fadeOut(200, function() {
+                                $(this).removeClass('active').attr('src', "{% static 'dislike.png' %}").fadeIn(200);
+                            });
+                            likeButton.fadeOut(200, function() {
+                                $(this).addClass('active').attr('src', "{% static 'active_like.png' %}").fadeIn(200);
+                            });
                         } else if (data.disliked) {
-                            button.text('Undislike');
-                            button.addClass('active');
-                            button.siblings('.like-button').text('Like').removeClass('active');
+                            console.log('Disliked: Updating like button and dislike button');
+                            likeButton.fadeOut(200, function() {
+                                $(this).removeClass('active').attr('src', "{% static 'like.png' %}").fadeIn(200);
+                            });
+                            dislikeButton.fadeOut(200, function() {
+                                $(this).addClass('active').attr('src', "{% static 'active_dislike.png' %}").fadeIn(200);
+                            });
                         } else {
-                            button.text(action.charAt(0).toUpperCase() + action.slice(1));
-                            button.removeClass('active');
+                            console.log('Neutral: Removing active class and updating src');
+                            button.fadeOut(200, function() {
+                                $(this).removeClass('active').attr('src', action === 'like' ? "{% static 'like.png' %}" : "{% static 'dislike.png' %}").fadeIn(200);
+                            });
                         }
-                        button.siblings('.likes-count').text(data.likes_count + ' like' + (data.likes_count !== 1 ? 's' : ''));
-                        button.siblings('.dislikes-count').text(data.dislikes_count + ' dislike' + (data.dislikes_count !== 1 ? 's' : ''));
+
+                        // Debugging logs
+                        console.log('Like button src:', likeButton.attr('src'));
+                        console.log('Dislike button src:', dislikeButton.attr('src'));
+
+                        // Update the counts
+                        votesContainer.find('.likes-count').text(data.likes_count);
+                        votesContainer.find('.dislikes-count').text(data.dislikes_count);
                     }
                 });
             });
@@ -495,24 +527,19 @@
                         <small>Category: {{ post.categoryId.name }}</small><br>
                         <small>Date: {{ post.timeStamp }}</small>
                     </div>
-                    
                 </div>
+                <br>
                 <p>{{ post.content }}</p>
+                <br>
                 <div class="votes">
                     <div class="vote">
-                        <span>👍</span>
+                        <img src="{% static 'like.png' %}" class="like-button {% if user in post.likes.all %}active{% endif %}" data-post-id="{{ post.postId }}" alt="Like">
                         <span class="likes-count">{{ post.likes.count }}</span>
                     </div>
                     <div class="vote">
-                        <span>👎</span>
+                        <img src="{% static 'dislike.png' %}" class="dislike-button {% if user in post.dislikes.all %}active{% endif %}" data-post-id="{{ post.postId }}" alt="Dislike">
                         <span class="dislikes-count">{{ post.dislikes.count }}</span>
                     </div>
-                </div>
-                <div class="post-actions">
-                    <a href="javascript:void(0);" class="like-button {% if user in post.likes.all %}active{% endif %}" data-post-id="{{ post.postId }}">Like</a>
-                    <a href="javascript:void(0);" class="dislike-button {% if user in post.dislikes.all %}active{% endif %}" data-post-id="{{ post.postId }}">Dislike</a>
-                    <span class="likes-count">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</span>
-                    <span class="dislikes-count">{{ post.dislikes.count }} dislike{{ post.dislikes.count|pluralize }}</span>
                 </div>
                 <form class="comment-form" data-post-id="{{ post.postId }}">
                     {% csrf_token %}
@@ -523,6 +550,7 @@
                     {% for comment in post.comments.all %}
                     <div class="comment" data-comment-id="{{ comment.comment_id }}">
                         <p class="comment-content">{{ comment.content }}</p>
+                        <br>
                         <p>Commented by: {{ comment.member.username }}</p>
                         <p class="comment-timestamp">Commented on: {{ comment.timestamp }}</p>
                         {% if comment.timestamp != comment.last_modified %}
@@ -539,48 +567,6 @@
                 </div>
             </div>
             {% endfor %}
-            <script>
-                $(document).ready(function() {
-                    $('.like-button, .dislike-button').click(function() {
-                        var postId = $(this).data('post-id');
-                        var action = $(this).hasClass('like-button') ? 'like' : 'dislike';
-                        var button = $(this);
-                        $.ajax({
-                            url: '/like_post/' + postId + '/',
-                            method: 'POST',
-                            headers: {
-                                'X-CSRFToken': '{{ csrf_token }}'
-                            },
-                            data: {
-                                action: action
-                            },
-                            success: function(data) {
-                                console.log('Response data:', data); // Debugging line
-                                if (data.liked) {
-                                    button.text('Unlike');
-                                    button.addClass('active');
-                                    button.siblings('.dislike-button').text('Dislike').removeClass('active');
-                                } else if (data.disliked) {
-                                    button.text('Undislike');
-                                    button.addClass('active');
-                                    button.siblings('.like-button').text('Like').removeClass('active');
-                                } else {
-                                    button.text(action.charAt(0).toUpperCase() + action.slice(1));
-                                    button.removeClass('active');
-                                }
-                                button.siblings('.likes-count').text(data.likes_count + ' like' + (data.likes_count !== 1 ? 's' : ''));
-                                button.siblings('.dislikes-count').text(data.dislikes_count + ' dislike' + (data.dislikes_count !== 1 ? 's' : ''));
-                                button.closest('.post').find('.votes .likes-count').text(data.likes_count);
-                                button.closest('.post').find('.votes .dislikes-count').text(data.dislikes_count);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error:', error);
-                                console.error('Response:', xhr.responseText);
-                            }
-                        });
-                    });
-                });
-            </script>
         </div>
 
         <div class="trending fixed-trending">
