@@ -1,20 +1,167 @@
-<h2>Register</h2>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {% if form.errors %}
-        <div class="form-errors">
-            <ul>
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIT-U Connect Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 600px;
+            margin: 20px;
+            display: flex;
+            flex-direction: row;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            background: white;
+        }
+
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(135deg, #8B0000, #600000);
+            padding: 40px;
+            color: #FFD700;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100%;
+        }
+
+        h1 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-section h1 {
+            color: #000;
+        }
+
+        .welcome-text {
+            color: white;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        select {
+            background-color: white;
+        }
+
+        .password-rules {
+            font-size: 12px;
+            color: #666;
+            margin: 5px 0;
+            list-style: none;
+        }
+
+        .password-rules li {
+            margin: 3px 0;
+        }
+
+        .password-rules li::before {
+            content: "•";
+            color: #666;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FFD700;
+            border: none;
+            border-radius: 4px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .register-btn:hover {
+            background-color: #FFC700;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .welcome-section, .form-section {
+                padding: 30px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1>Create an Account</h1>
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if form.errors %}
+                    <div class="form-errors">
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <button type="submit" class="register-btn">Register</button>
+            </form>
         </div>
-    {% endif %}
-    <button type="submit">Register</button>
-</form>
+        <div class="welcome-section">
+            <h1>Welcome to<br>CIT-U Connect</h1>
+            <p class="welcome-text">
+                Our platform bridges the gap between our school community and administration, 
+                providing a seamless way to express thoughts, file complaints, and receive feedback. 
+                Join us in creating a collaborative and transparent environment where every voice 
+                matters and every concern is addressed with care and efficiency.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
