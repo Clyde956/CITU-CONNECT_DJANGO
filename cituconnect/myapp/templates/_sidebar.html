@@ -1,0 +1,13 @@
+<!-- cituconnect/myapp/templates/_sidebar.html -->
+<div class="sidebar fixed-sidebar">
+    <div class="logo-section">
+        <div class="logo"></div>
+        <br>
+        <h2>CITU <br>CONNECT</h2>
+    </div>
+    <div class="nav-item"><a href="{%url 'all_posts' %}">Home</a></div>
+    <div class="nav-item"><a href="{% url 'hello_user' %}">My Posts</a></div>
+    <div class="nav-item"><a href="">Profile Settings</a></div>
+    <div class="nav-item"><a href="{% url 'notifications' %}">Notifications</a></div>
+    <div class="nav-item"><a href="{% url 'logout' %}">Logout</a></div>
+</div>

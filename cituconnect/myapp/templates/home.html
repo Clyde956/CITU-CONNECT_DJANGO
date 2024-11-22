@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome | Home Page</title>
+    <title>Welcome | CITU-Connect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        /* General Reset */
         * {
             margin: 0;
             padding: 0;
@@ -13,93 +13,343 @@
         }
  
         body {
-            border: solid;;
-            margin: 0;
             font-family: 'Arial', sans-serif;
-            background-color: #fdf6e3; /* Light beige for contrast */
-            color: #3d0000; /* Deep maroon for text */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            background-color: #fdf6e3;
+            color: #3d0000;
+            line-height: 1.6;
         }
  
         header {
-            width: 100%;
-            background-color: #800000; /* Maroon */
+            background-color: #800000;
             padding: 15px 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: flex-end;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
  
-        header h1 {
-            color: #ffd700; /* Gold */
-            margin-left: 20px;
-            font-size: 24px;
-        }
- 
-        header nav {
+        nav {
             margin-right: 20px;
         }
  
-        header nav a {
+        .nav-link {
             text-decoration: none;
-            color: #ffd700; /* Gold */
-            background-color: #800000; /* Maroon */
+            color: #ffd700;
             border: 2px solid #ffd700;
-            padding: 10px 15px;
-            margin-left: 10px;
+            padding: 10px 20px;
+            margin-left: 15px;
             border-radius: 5px;
             font-weight: bold;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: all 0.3s ease;
         }
  
-        header nav a:hover {
-            background-color: #ffd700; /* Gold */
-            color: #800000; /* Maroon */
+        .nav-link:hover {
+            background-color: #ffd700;
+            color: #800000;
         }
  
         main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+ 
+        .hero-section {
             text-align: center;
-            margin-top: 50px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
         }
  
-        main h1 {
+        .hero-title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+ 
+        .highlight {
+            color: #FFB71B;
+        }
+ 
+        .hero-subtitle {
             font-size: 36px;
-            color: #800000; /* Maroon */
+            margin-bottom: 30px;
         }
  
-        main p {
+        .hero-text {
+            max-width: 800px;
+            margin: 0 auto 30px;
             font-size: 18px;
-            margin-top: 20px;
-            color: #3d0000; /* Deep maroon for content */
+            color: #4F4F4F;
         }
  
-        footer {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #800000; /* Maroon */
+        .get_started_button {
+            background-color: #FFB71B;
+            color: #000;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+ 
+        .get_started_button:hover {
+            background-color: #FFA700;
+        }
+ 
+        .section {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .section-title {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+ 
+        /* New About Us Styles */
+        .about-us-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+ 
+        .about-us-text {
+            font-size: 18px;
+            color: #4F4F4F;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+ 
+        .mission-container {
+            margin: 32px 0;
+        }
+ 
+        .mission-title {
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+ 
+        .about-us-list {
+            list-style-type: disc;
+            margin-left: 40px;
+            margin-bottom: 24px;
+        }
+ 
+        .about-us-list li {
+            margin-bottom: 12px;
+            padding-left: 8px;
+            line-height: 1.5;
+            color: #4F4F4F;
+            font-size: 18px;
+        }
+ 
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+ 
+        .feature-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+ 
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+ 
+        .feature-icon {
+            font-size: 40px;
+            color: #FFB71B;
+            margin-bottom: 20px;
+        }
+ 
+        .feature-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+ 
+        .feature-text {
+            color: #666;
+        }
+ 
+        .steps-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+ 
+        .step {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+ 
+        .social-icons {
+            margin: 20px 0;
+        }
+ 
+        .social-icons a {
+            color: white;
+            font-size: 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+ 
+        .social-icons a:hover {
+            color: #FFB71B;
+        }
+ 
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+ 
+            .hero-subtitle {
+                font-size: 28px;
+            }
+ 
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+ 
+            .about-us-container {
+                padding: 0 16px;
+            }
+ 
+            .about-us-text {
+                font-size: 16px;
+            }
+ 
+            .about-us-list li {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to Our Website</h1>
         <nav>
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Register</a>
+            <a href="{% url 'login' %}" class="nav-link">Login</a>
+            <a href="{% url 'register' %}" class="nav-link">Register</a>
         </nav>
     </header>
+ 
     <main>
-        <h1>Welcome to the Home Page</h1>
-        <p>
-            Explore our features by logging in or registering as a new user.
-        </p>
+        <section class="hero-section">
+            <h1 class="hero-title">Welcome to <span class="highlight">CITU-CONNECT</span></h1>
+            <h2 class="hero-subtitle">Your Voice, Heard</h2>
+            <p class="hero-text">
+                At CITU-CONNECT, we bridge the gap between the school community and administration, creating a seamless way to express thoughts, file concerns, and receive timely feedback. Together, let's foster a collaborative and transparent environment where every voice matters, and every concern is addressed with care and efficiency.
+            </p>
+            <button class="get_started_button" onclick="window.location.href='{% url 'register' %}'">Get Started</button>
+        </section>
+ 
+        <!-- Modified About Us Section -->
+        <section class="section">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-us-container">
+                <p class="about-us-text">
+                    CITU-CONNECT is more than a platform; it's a solution designed to unify and strengthen communication within our school. We believe in the power of open dialogue to build trust and drive meaningful change.
+                </p>
+               
+                <p class="about-us-text">
+                    CITU-CONNECT is committed to creating a safe, inclusive space where your voice leads the way to improvement.
+                </p>
+            </div>
+        </section>
+ 
+        <section class="section">
+            <h2 class="section-title">Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-comments feature-icon"></i>
+                    <h3 class="feature-title">Seamless Feedback</h3>
+                    <p class="feature-text">Share thoughts and suggestions directly with the administration.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-lock feature-icon"></i>
+                    <h3 class="feature-title">Private Complaints</h3>
+                    <p class="feature-text">File concerns confidentially with guaranteed follow-ups.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bell feature-icon"></i>
+                    <h3 class="feature-title">Real-Time Updates</h3>
+                    <p class="feature-text">Get instant notifications on your submission status.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h3 class="feature-title">Secure Storage</h3>
+                    <p class="feature-text">Your data is kept safe and confidential.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-tachometer-alt feature-icon"></i>
+                    <h3 class="feature-title">Smart Dashboard</h3>
+                    <p class="feature-text">Track all your feedback and complaints easily.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users feature-icon"></i>
+                    <h3 class="feature-title">Community Forum</h3>
+                    <p class="feature-text">Engage in discussions with peers and staff.</p>
+                </div>
+            </div>
+        </section>
+ 
+        <section class="section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <h3>Submit Your Input</h3>
+                    <p>Log in and file a complaint, suggestion, or feedback with just a few clicks.</p>
+                </div>
+                <div class="step">
+                    <h3>Track Progress</h3>
+                    <p>Receive instant confirmation and monitor your submission status.</p>
+                </div>
+                <div class="step">
+                    <h3>Get Resolution</h3>
+                    <p>Stay informed as the administration addresses your concerns promptly.</p>
+                </div>
+            </div>
+        </section>
+ 
+        <footer class="footer">
+            <h2>Stay Connected</h2>
+            <p>Follow us on social media for updates and news!</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <p>&copy; 2023 CITU-CONNECT. All rights reserved.</p>
+        </footer>
     </main>
-    <footer>
-        &copy; 2024 Your Website Name. All rights reserved.
-    </footer>
 </body>
 </html>

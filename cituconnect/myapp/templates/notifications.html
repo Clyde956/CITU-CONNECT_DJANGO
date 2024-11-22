@@ -1,9 +1,10 @@
 <!-- cituconnect/myapp/templates/notifications.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Notifications</title>
+    <link rel="stylesheet" type="text/css" href="{% static '_sidebar.css' %}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,9 +13,11 @@
             padding: 0;
         }
         .container {
-            width: 80%;
+            width: 50%;
             margin: auto;
             overflow: hidden;
+            position: relative;
+            left: 100px;
         }
         header {
             background: #333;
@@ -63,14 +66,8 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Notifications</h1>
-    </header>
+    {% include '_sidebar.html' %}
     <div class="container">
-        <div class="nav-buttons">
-            <a href="{% url 'hello_user' %}">My Posts</a>
-            <a href="{% url 'all_posts' %}">All Posts</a>
-        </div>
         <div class="notifications">
             {% for notification in notifications %}
                 <div class="notification">

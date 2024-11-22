@@ -1,0 +1,41 @@
+.sidebar {
+    background: #8B0000;
+    width: 250px;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+.fixed-sidebar {
+    position: fixed;
+    top: 20px;
+    left: 150px;
+    height: 100%;
+    width: 250px;
+    overflow-y: auto;
+}
+.logo-section {
+    text-align: center;
+    padding: 20px 0;
+}
+.logo {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+.nav-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    cursor: pointer;
+}
+.nav-item a {
+    text-decoration: none;
+    color: white;
+}
+
+.nav-item a:hover {
+    color: #ddd;
+}
