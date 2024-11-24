@@ -132,3 +132,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Add this line at the end of the file
 LOGIN_REDIRECT_URL = 'all_posts'  # or the name of the URL pattern you want to redirect to
+
+# cituconnect/cituconnect/settings.py
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'myapp.middleware.MarkNotificationsAsReadMiddleware',  # Add this line
+]
