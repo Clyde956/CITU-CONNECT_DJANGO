@@ -122,7 +122,9 @@ def add_comment(request, post_id):
             notification_content = f"{request.user.username} commented on your post: {post.content[:20]}"
             Notification.objects.create(content=notification_content, recipient=post.member)
         
-        return JsonResponse({'status': 'success'})
+        return JsonResponse({'status': 'success', 'comment_id': comment.comment_id})
+
+    return JsonResponse({'status': 'error'})
 
 @csrf_exempt
 @login_required
