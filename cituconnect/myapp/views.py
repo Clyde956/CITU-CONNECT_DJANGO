@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm, PostForm
 from .models import Notification, Post, Comment
+from django.utils import timezone
+from datetime import timedelta
 
 def register(request):
     if request.method == 'POST':
@@ -48,8 +50,8 @@ def create_post(request):
         form = PostForm()
     return render(request, 'create_post.html', {'form': form})
 
-def home(request):
-    return render(request, 'home.html')
+def landing_page(request):
+    return render(request, 'landing_page.html')
 
 def success(request):
     return render(request, 'success.html')
@@ -100,10 +102,10 @@ def like_post(request, post_id):
 
     return JsonResponse({'liked': liked, 'likes_count': post.likes.count()})
 
-@login_required
-def notifications(request):
-    notifications = request.user.notifications.all().order_by('-timeStamp')
-    return render(request, 'notifications.html', {'notifications': notifications})
+#@login_required
+#def notifications(request):
+    #notifications = request.user.notifications.all().order_by('-timeStamp')
+    #return render(request, 'notifications.html', {'notifications': notifications})
 
 @login_required
 def logout_view(request):
@@ -160,10 +162,34 @@ def all_posts_view(request):
     #print(len(posts))  # Debugging: Print the posts to the console
     #return render(request, 'all_posts.html', {'posts': posts})
 
+#@login_required
+#def notifications_view(request):
+    #notifications = Notification.objects.filter(recipient=request.user)
+    #return render(request, 'notifications.html', {'notifications': notifications})
+
+# cituconnect/myapp/views.py
 @login_required
 def notifications_view(request):
-    notifications = Notification.objects.filter(recipient=request.user)
-    return render(request, 'notifications.html', {'notifications': notifications})
+    today = timezone.now().date()
+    notifications = request.user.notifications.all().order_by('-timeStamp')
+    unread_recent_notifications = notifications.filter(isRead=False, timeStamp__date=today)
+    read_recent_notifications = notifications.filter(isRead=True, timeStamp__date=today)
+    older_notifications = notifications.exclude(timeStamp__date=today)
+
+    # Track displayed notifications in session
+    displayed_notifications = request.session.get('displayed_notifications', [])
+    new_displayed_notifications = list(unread_recent_notifications.values_list('notification_id', flat=True))
+    request.session['displayed_notifications'] = displayed_notifications + new_displayed_notifications
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        unread_count = request.user.notifications.filter(isRead=False).count()
+        return JsonResponse({'unread_count': unread_count})
+
+    return render(request, 'notifications.html', {
+        'unread_recent_notifications': unread_recent_notifications,
+        'read_recent_notifications': read_recent_notifications,
+        'older_notifications': older_notifications
+    })
 
 @csrf_exempt
 @login_required
@@ -232,3 +258,8 @@ def comment_post_view(request, post_id):
             Notification.objects.create(content=notification_content, recipient=post.member)
         return JsonResponse({'status': 'success', 'comment_id': comment.comment_id})
     return JsonResponse({'status': 'error'})
+
+# cituconnect/myapp/views.py
+@login_required
+def profile_settings(request):
+    return render(request, 'profile_settings.html')

@@ -2,6 +2,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        .like-button, .dislike-button {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .like-button.active {
+            content: url("{% static 'active_like.png' %}");
+        }
+
+        .dislike-button.active {
+            content: url("{% static 'active_dislike.png' %}");
+        }
+    </style>
     <link rel="stylesheet" type="text/css" href="{% static 'all_posts.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '_sidebar.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -211,7 +226,7 @@
                     </div>
                     <div class="post-meta">
                         <small>{{ post.categoryId.name }}</small><br>
-                        <small>priority level: {{ post.priorityLevel }}</small>
+                        <small>Priority level: {{ post.priorityLevel }}</small>
                     </div>
                 </div>
                 <br>

@@ -1,13 +1,32 @@
 <!-- cituconnect/myapp/templates/_sidebar.html -->
+{% load custom_tags %}
+
 <div class="sidebar fixed-sidebar">
     <div class="logo-section">
         <div class="logo"></div>
         <br>
         <h2>CITU <br>CONNECT</h2>
     </div>
-    <div class="nav-item"><a href="{%url 'all_posts' %}">Home</a></div>
-    <div class="nav-item"><a href="{% url 'hello_user' %}">My Posts</a></div>
-    <div class="nav-item"><a href="">Profile Settings</a></div>
-    <div class="nav-item"><a href="{% url 'notifications' %}">Notifications</a></div>
-    <div class="nav-item"><a href="{% url 'logout' %}">Logout</a></div>
+    <div class="nav-item"><a href="{% url 'all_posts' %}" class="nav-link">Home</a></div>
+    <div class="nav-item"><a href="{% url 'hello_user' %}" class="nav-link">My Posts</a></div>
+    <div class="nav-item"><a href="{% url 'profile_settings' %}" class="nav-link">Profile Settings</a></div>
+    <div class="nav-item">
+        <a href="{% url 'notifications' %}" class="nav-link">Notifications</a>
+        {% unread_notifications_count request.user as unread_count %}
+        {% if unread_count > 0 %}
+            <span class="notification-count">{{ unread_count }}</span>
+        {% endif %}
+    </div>
+    <div class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link">Logout</a></div>
 </div>
+
+<style>
+.notification-count {
+    background-color: yellow;
+    color: black;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+</style>

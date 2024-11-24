@@ -55,6 +55,7 @@ class Comment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
+# cituconnect/myapp/models.py
 class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
     content = models.TextField()

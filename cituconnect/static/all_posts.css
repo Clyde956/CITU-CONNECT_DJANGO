@@ -270,17 +270,3 @@ form button:hover {
 .comment-form input {
     margin-right: 10px;
 }
-
-.like-button, .dislike-button {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-}
-
-.like-button.active {
-    content: url("{% static 'active_like.png' %}");
-}
-
-.dislike-button.active {
-    content: url("{% static 'active_dislike.png' %}");
-}
