@@ -143,5 +143,5 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'myapp.middleware.MarkNotificationsAsReadMiddleware',  # Add this line
+    'myapp.middleware.MarkNotificationsAsReadMiddleware', # Add this line
 ]

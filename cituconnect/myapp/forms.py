@@ -10,4 +10,4 @@ class CustomUserCreationForm(UserCreationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['content', 'priorityLevel', 'isAnonymous', 'categoryId']
+        fields = ['content', 'priorityLevel', 'isAnonymous', 'categoryId', 'image']

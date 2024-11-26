@@ -40,7 +40,7 @@ def login_view(request):
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)  # Ensure request.FILES is included
         if form.is_valid():
             post = form.save(commit=False)
             post.member = request.user

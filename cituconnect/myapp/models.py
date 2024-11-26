@@ -46,6 +46,7 @@ class Post(models.Model):
     isAnonymous = models.BooleanField(default=False)
     approvedBy = models.CharField(max_length=30, null=True, blank=True)
     categoryId = models.ForeignKey('Category', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='post_images/', null=True, blank=True)
 
 class Comment(models.Model):
     comment_id = models.AutoField(primary_key=True)
