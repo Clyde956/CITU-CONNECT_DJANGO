@@ -12,7 +12,7 @@ from datetime import timedelta
 
 def register(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)  # Ensure request.FILES is included
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -30,6 +30,8 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            if user.is_staff:  # Check if the user is an admin
+                return redirect('custom_admin_dashboard')  # Redirect admin users to the admin dashboard
             next_url = request.POST.get('next', 'all_posts')  # Default to 'all_posts' if 'next' is not provided
             return redirect(next_url)
         else:

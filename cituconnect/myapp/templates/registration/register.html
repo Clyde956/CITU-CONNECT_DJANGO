@@ -133,9 +133,13 @@
     <div class="container">
         <div class="form-section">
             <h1>Create an Account</h1>
-            <form method="POST" action="{% url 'register' %}">
+            <form method="POST" action="{% url 'register' %}" enctype="multipart/form-data">  <!-- Add enctype attribute -->
                 {% csrf_token %}
                 {{ form.as_p }}
+                <div class="form-group">
+                    <label for="id_profile_picture">Upload Profile Picture:</label>
+                    <input type="file" name="profile_picture" id="id_profile_picture">
+                </div>
                 {% if form.errors %}
                     <div class="form-errors">
                         <ul>

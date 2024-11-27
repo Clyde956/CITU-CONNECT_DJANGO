@@ -184,10 +184,6 @@
     {% include '_sidebar.html' %}
     <div class="container">
         <div class="main-content">
-            <header class="header">
-                <h1 class="header-title">Welcome, {{ user.first_name }}</h1>
-            </header>
-
             <div class="card">
                 <div class="profile-header">
                     {% if user.profile_picture %}
@@ -196,7 +192,7 @@
                         <img src="{% static 'default_profile_picture.png' %}" alt="Profile" class="profile-pic">
                     {% endif %}
                     <div class="profile-info">
-                        <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
                         <p>{{ user.email }}</p>
                     </div>
                 </div>
@@ -209,12 +205,12 @@
                             {{ form.username }}
                         </div>
                         <div class="form-group">
-                            {{ form.first_name.label_tag }}
-                            {{ form.first_name }}
+                            {{ form.firstName.label_tag }}
+                            {{ form.firstName }}
                         </div>
                         <div class="form-group">
-                            {{ form.last_name.label_tag }}
-                            {{ form.last_name }}
+                            {{ form.lastName.label_tag }}
+                            {{ form.lastName }}
                         </div>
                         <div class="form-group">
                             {{ form.email.label_tag }}
