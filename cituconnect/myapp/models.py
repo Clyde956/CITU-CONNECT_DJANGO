@@ -48,6 +48,17 @@ class Post(models.Model):
     categoryId = models.ForeignKey('Category', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_images/', null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            old_post = Post.objects.get(pk=self.pk)
+            if old_post.status != self.status:
+                self.create_status_change_notification()
+        super().save(*args, **kwargs)
+
+    def create_status_change_notification(self):
+        content = f"Your post '{self.content[:20]}...' has been {self.status}. Check it out!"
+        Notification.objects.create(content=content, recipient=self.member)
+
 class Comment(models.Model):
     comment_id = models.AutoField(primary_key=True)
     content = models.TextField()

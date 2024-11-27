@@ -158,8 +158,8 @@ def delete_comment(request, comment_id):
 
 @login_required
 def all_posts_view(request):
-    all_posts = Post.objects.all().order_by('-timeStamp')  # Order posts by timestamp in descending order
-    return render(request, 'all_posts.html', {'posts': all_posts, 'username': request.user.username})
+    approved_posts = Post.objects.filter(status='approved').order_by('-timeStamp')  # Only fetch approved posts
+    return render(request, 'all_posts.html', {'posts': approved_posts, 'username': request.user.username})
     #posts = Post.objects.filter(member__is_active=True)  # Fetch all posts by active users
     #print(len(posts))  # Debugging: Print the posts to the console
     #return render(request, 'all_posts.html', {'posts': posts})
