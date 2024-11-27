@@ -65,16 +65,13 @@ body {
 .post-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   position: relative;
 }
 .post-info {
   flex: 1;
 }
 .post-meta {
-  position: absolute;
-  top: 0;
-  right: 0;
   text-align: right;
 }
 
@@ -272,8 +269,8 @@ form button:hover {
   margin-right: 10px;
 }
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   margin-right: 10px;
 }
