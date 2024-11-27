@@ -5,7 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .forms import CustomUserCreationForm, PostForm
+from .forms import CustomUserCreationForm, PostForm, UserProfileForm
 from .models import Notification, Post, Comment
 from django.utils import timezone
 from datetime import timedelta
@@ -262,6 +262,25 @@ def comment_post_view(request, post_id):
     return JsonResponse({'status': 'error'})
 
 # cituconnect/myapp/views.py
+from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import UserProfileForm
+
+# cituconnect/myapp/views.py
 @login_required
 def profile_settings(request):
-    return render(request, 'profile_settings.html')
+    user = request.user
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data.get('password')
+            if password:
+                user.set_password(password)
+            user.save()
+            update_session_auth_hash(request, user)  # Re-authenticate the user
+            return redirect('hello_user')  # Redirect to a page that shows the updated profile
+    else:
+        form = UserProfileForm(instance=user)
+    return render(request, 'profile_settings.html', {'form': form})

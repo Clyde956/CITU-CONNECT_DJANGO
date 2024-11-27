@@ -19,6 +19,7 @@ class User(AbstractUser):
         ('staff', 'Staff'),
         ('faculty', 'Faculty'),
     ])
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
     school = models.ForeignKey('School', on_delete=models.CASCADE, null=True, blank=True)
     groups = models.ManyToManyField(Group, related_name='custom_user_set')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set_permissions')
