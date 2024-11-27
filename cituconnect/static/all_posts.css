@@ -11,10 +11,10 @@ body {
 }
 
 .container {
-  display: flex;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
 }
 
 .header {
@@ -25,11 +25,11 @@ body {
 }
 
 .welcome {
-  color: #8b0000;
+  color: #8B0000;
 }
 
 .new-button {
-  background: #8b0000;
+  background: #8B0000;
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
@@ -45,7 +45,7 @@ body {
 }
 
 .announcement-banner {
-  background: #8b0000;
+  background: #8B0000;    
   color: white;
   padding: 20px;
   text-align: center;
@@ -58,20 +58,23 @@ body {
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   cursor: pointer;
 }
 
 .post-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
 }
 .post-info {
   flex: 1;
 }
 .post-meta {
+  position: absolute;
+  top: 0;
+  right: 0;
   text-align: right;
 }
 
@@ -79,20 +82,8 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #8b0000;
+  background: #8B0000;
   margin-right: 10px;
-}
-
-.trending {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 250px;
-}
-
-.trending-item {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
 }
 
 .votes {
@@ -107,8 +98,7 @@ body {
   gap: 5px;
 }
 
-.likes-count,
-.dislikes-count {
+.likes-count, .dislikes-count {
   font-weight: bold;
   margin-right: 10px;
 }
@@ -204,10 +194,9 @@ form button:hover {
 }
 
 .main-content {
-  flex: 1;
-  margin-left: 270px;
-  margin-right: 270px;
-  padding: 20px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .modal {
@@ -219,8 +208,8 @@ form button:hover {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
@@ -247,19 +236,6 @@ form button:hover {
   cursor: pointer;
 }
 
-.fixed-trending {
-  position: fixed;
-  top: 20px;
-  right: 150px;
-  width: 250px;
-  height: 100%;
-  background-color: #f2ca00;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
 .comment-form {
   display: flex;
   align-items: center;
@@ -268,9 +244,10 @@ form button:hover {
 .comment-form input {
   margin-right: 10px;
 }
+
 .avatar {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 10px;
 }

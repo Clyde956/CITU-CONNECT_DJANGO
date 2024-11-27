@@ -135,6 +135,64 @@
       .comment-form button:hover {
         background: #00b35a;
       }
+      .trending {
+            background: #8B0000; /* Maroon color */
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            color: white;
+            z-index: 1;
+        }
+ 
+        .fixed-trending {
+            position: fixed;
+            top: 20px;
+            right: 150px;
+            width: 250px;
+            height: 100%;
+            background-color: #8B0000; /* Maroon color */
+            padding: 10px;
+            border: px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+ 
+        .trending h3 {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+ 
+        .trending-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+ 
+        .trending-item:hover{
+            background-color: #ffee8d;
+            border-radius: 10px;
+        }
+ 
+        .trending-item a {
+            color: white;
+            text-decoration: none;
+            flex: 1;
+        }
+ 
+        .trending-item a:hover {
+            color: black;
+        }
+ 
+        .trending-rank {
+            background: #FFD700; /* Yellow color */
+            color: black;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
     </style>
 
     <link
@@ -461,7 +519,10 @@
           >
             New Report
           </button>
-          <input type="search" class="search" placeholder="Search..." />
+          <form method="GET" action="{% url 'all_posts' %}" class="search-form">
+            <input type="search" name="search" class="search" placeholder="Search...">
+            <button type="submit">Search</button>
+          </form>
         </div>
 
         <div class="announcement-banner">
@@ -732,10 +793,14 @@
 
       <div class="trending fixed-trending">
         <h3>Trending Issues</h3>
-        <div class="trending-item">WiFi Connectivity Issues</div>
-        <div class="trending-item">Parking Space Availability</div>
-        <div class="trending-item">Cafeteria Services</div>
-        <div class="trending-item">Library Resources</div>
+        <br>
+        <br>
+          {% for category in trending_categories %}
+          <div class="trending-item">
+              <div class="trending-rank">{{ forloop.counter }}</div>
+              <a href="?category={{ category.categoryId__name }}">{{ category.categoryId__name }}</a>
+          </div>
+          {% endfor %}
       </div>
     </div>
   </body>
