@@ -1,5 +1,4 @@
-# cituconnect/myapp/urls.py
-from django.urls import path
+from django.urls import path, include
 from .views import (
     register, login_view, create_post, landing_page, success, update_post, delete_post,
     hello_user, my_posts_view, like_post, logout_view, add_comment,
@@ -26,4 +25,5 @@ urlpatterns = [
     path('like_post_view/<int:post_id>/', like_post_view, name='like_post_view'),
     path('comment_post/<int:post_id>/', comment_post_view, name='comment_post'),
     path('profile_settings/', profile_settings, name='profile_settings'),
+    path('custom-admin/', include('custom_admin.urls')),  # Include custom admin URLs
 ]

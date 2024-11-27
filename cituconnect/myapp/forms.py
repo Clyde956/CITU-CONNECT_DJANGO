@@ -5,7 +5,7 @@ from .models import User, Post, School
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('firstName', 'lastName', 'username', 'email', 'password1', 'password2', 'role', 'school')
+        fields = ('firstName', 'lastName', 'username', 'email', 'password1', 'password2', 'role', 'school', 'profile_picture')
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -20,7 +20,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'school', 'profile_picture', 'password', 'confirm_password']
+        fields = ['username', 'firstName', 'lastName', 'email', 'school', 'profile_picture', 'password', 'confirm_password']
 
     def clean(self):
         cleaned_data = super().clean()

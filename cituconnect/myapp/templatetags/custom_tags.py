@@ -1,5 +1,7 @@
 # cituconnect/myapp/templatetags/custom_tags.py
 from django import template
+from django.template.loader import render_to_string
+from myapp.models import Post  # Corrected import path
 
 register = template.Library()
 
