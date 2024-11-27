@@ -8,3 +8,4 @@ __pycache__/
 # Django settings and local settings
 *.sqlite3
 .env
+media/

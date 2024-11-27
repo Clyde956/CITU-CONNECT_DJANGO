@@ -2,21 +2,141 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <style>
         .like-button, .dislike-button {
             width: 24px;
             height: 24px;
             cursor: pointer;
         }
-
+    
         .like-button.active {
             content: url("{% static 'active_like.png' %}");
         }
-
+    
         .dislike-button.active {
             content: url("{% static 'active_dislike.png' %}");
         }
+    
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    
+        .three-dots {
+            cursor: pointer;
+            font-size: 24px;
+        }
+    
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Ensure the dropdown appears above other elements */
+        }
+    
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+    
+        .dropdown a:hover {
+            background: #f0f0f0;
+        }
+    
+        .comment {
+            position: relative; /* Ensure the dropdown is positioned correctly */
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    
+        .comment-header {
+            display: flex;
+            align-items: center;
+        }
+    
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    
+        .comment-body {
+            display: flex;
+            flex-direction: column;
+        }
+    
+        .comment-username {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    
+        .comment-content {
+            margin-bottom: 5px;
+        }
+    
+        .comment-timestamp {
+            font-size: 12px;
+            color: #888;
+        }
+    
+        .comment-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+    
+        .comment-actions a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    
+        .comment-actions a:hover {
+            text-decoration: underline;
+        }
+    
+        .comment-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    
+        .comment-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    
+        .comment-form button {
+            padding: 10px 20px;
+            background: #02bb2a;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .comment-form button:hover {
+            background: #00b35a;
+        }
     </style>
+    
     <link rel="stylesheet" type="text/css" href="{% static 'all_posts.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '_sidebar.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -109,13 +229,23 @@
                                 // Dynamically add the new comment to the DOM
                                 var newComment = `
                                     <div class="comment" data-comment-id="${data.comment_id}">
-                                        <p class="comment-content">${commentContent}</p>
-                                        <p>Commented by: {{ user.username }}</p>
-                                        <p class="comment-timestamp">Just now</p>
-                                        <div class="comment-actions">
-                                            <a href="javascript:void(0);" class="update-button" data-comment-id="${data.comment_id}">Update</a>
-                                            <a href="javascript:void(0);" class="delete-button" data-comment-id="${data.comment_id}">Delete</a>
+                                        <div class="comment-header">
+                                            <img src="${data.profile_picture_url}" alt="Profile Picture" class="comment-avatar">
+                                            <div class="comment-body">
+                                                <p class="comment-username">{{ user.username }}</p>
+                                                <p class="comment-content">${commentContent}</p>
+                                                <p class="comment-timestamp">Just now</p>
+                                            </div>
                                         </div>
+                                        <div class="comment-actions">
+                                            <div class="three-dots">⋮</div>
+                                            <div class="dropdown">
+                                                <a href="javascript:void(0);" class="update-button" data-comment-id="${data.comment_id}">Update</a>
+                                                <a href="javascript:void(0);" class="delete-button" data-comment-id="${data.comment_id}">Delete</a>
+                                                <a href="javascript:void(0);" class="reply-button" data-comment-id="${data.comment_id}">Reply</a>
+                                            </div>
+                                        </div>
+                                        <div class="replies"></div>
                                     </div>
                                 `;
                                 form.closest('.post-container').find('.comments').prepend(newComment); // Prepend the new comment
@@ -128,6 +258,12 @@
                 }
             });
 
+            $(document).on('click', '.three-dots', function(event) {
+                event.stopPropagation();
+                console.log('Three dots clicked');
+                $(this).siblings('.dropdown').toggle();
+            });
+
             $(document).on('click', '.update-button', function() {
                 var commentId = $(this).data('comment-id');
                 var commentContent = $(this).closest('.comment').find('.comment-content').text();
@@ -138,6 +274,68 @@
             $(document).on('click', '.delete-button', function() {
                 var commentId = $(this).data('comment-id');
                 $('#confirmDeleteModal').data('comment-id', commentId).show();
+            });
+
+            $(document).on('click', '.reply-button', function() {
+                var commentId = $(this).data('comment-id');
+                var replyForm = `
+                    <form class="reply-form" data-comment-id="${commentId}">
+                        {% csrf_token %}
+                        <input type="text" name="content" placeholder="Reply to this comment">
+                        <button type="submit">Reply</button>
+                    </form>
+                `;
+                $(this).closest('.comment').find('.replies').append(replyForm);
+            });
+
+            $(document).on('submit', '.reply-form', function(e) {
+                e.preventDefault();
+                var commentId = $(this).data('comment-id');
+                var replyContent = $(this).find('input[name="content"]').val();
+                var form = $(this);
+                if (replyContent) {
+                    $.ajax({
+                        url: '/add_reply/' + commentId + '/',
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        data: {
+                            content: replyContent
+                        },
+                        success: function(data) {
+                            if (data.status === 'success') {
+                                // Show success popup
+                                var popup = $('<div class="popup">Reply successfully added.</div>');
+                                $('body').append(popup);
+                                popup.fadeIn();
+                                setTimeout(function() {
+                                    popup.fadeOut(function() {
+                                        popup.remove();
+                                    });
+                                }, 3000);
+
+                                // Dynamically add the new reply to the DOM
+                                var newReply = `
+                                    <div class="reply" data-reply-id="${data.reply_id}">
+                                        <div class="reply-header">
+                                            <img src="${data.profile_picture_url}" alt="Profile Picture" class="reply-avatar">
+                                            <div class="reply-body">
+                                                <p class="reply-username">{{ user.username }}</p>
+                                                <p class="reply-content">${replyContent}</p>
+                                                <p class="reply-timestamp">Just now</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                form.closest('.replies').prepend(newReply); // Prepend the new reply
+                                form.remove(); // Remove the reply form
+                            } else {
+                                alert('Error adding reply.');
+                            }
+                        }
+                    });
+                }
             });
 
             $('#confirmDeleteButton').click(function() {
@@ -189,6 +387,12 @@
                 });
             });
 
+            $(document).click(function(event) {
+                if (!$(event.target).closest('.three-dots, .dropdown').length) {
+                    $('.dropdown').hide();
+                }
+            });
+
             $('.post-container').click(function(event) {
                 // Prevent the click event from propagating to child elements
                 if (!$(event.target).closest('.comment-form, .comment-actions, .like-button, .dislike-button').length) {
@@ -206,7 +410,7 @@
             <div class="header">
                 <div class="welcome">
                     <h2>Welcome back,</h2>
-                    <h3>{{ username }}</h3>
+                    <h3>{{ user.username }}</h3> <!-- Line 79 -->
                 </div>
                 <button class="new-button" onclick="window.location.href='{% url 'create_post' %}'">New Report</button>
                 <input type="search" class="search" placeholder="Search...">
@@ -219,7 +423,13 @@
             {% for post in posts %}
             <div class="post-container">
                 <div class="post-header">
-                    <div class="post-avatar"></div>
+                    <div class="post-avatar">
+                        {% if post.member.profile_picture %}
+                            <img src="{{ post.member.profile_picture.url }}" alt="Profile Picture" class="post-avatar">
+                        {% else %}
+                            <img src="{% static 'default_profile_picture.png' %}" alt="Profile Picture" class="post-avatar">
+                        {% endif %}
+                    </div>
                     <div class="post-info">
                         <small><b>{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</b></small><br>
                         <small>{{ post.timeStamp }}</small>
@@ -254,20 +464,48 @@
                     <button type="submit">Comment</button>
                 </form>
                 <div class="comments">
-                    {% for comment in post.comments.all %}
+                    {% for comment in post.comments.all reversed %}
                     <div class="comment" data-comment-id="{{ comment.comment_id }}">
-                        <p class="comment-content">{{ comment.content }}</p>
-                        <br>
-                        <p>Commented by: {{ comment.member.username }}</p>
-                        <p class="comment-timestamp">Commented on: {{ comment.timestamp }}</p>
-                        {% if comment.timestamp != comment.last_modified %}
-                        <p class="comment-timestamp">(Edited: {{ comment.last_modified }})</p>
-                        {% endif %}
-                        <div class="comment-actions">
-                            {% if comment.member == user %}
-                            <a href="javascript:void(0);" class="update-button" data-comment-id="{{ comment.comment_id }}">Update</a>
-                            <a href="javascript:void(0);" class="delete-button" data-comment-id="{{ comment.comment_id }}">Delete</a>
+                        <div class="comment-header">
+                            {% if comment.member.profile_picture %}
+                                <img src="{{ comment.member.profile_picture.url }}" alt="Profile Picture" class="comment-avatar" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                            {% else %}
+                                <img src="{% static 'default_profile_picture.png' %}" alt="Profile Picture" class="comment-avatar" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
                             {% endif %}
+                            <p class="comment-username">{{ comment.member.username }}</p>
+                            <div class="comment-body">
+                                <p class="comment-content">{{ comment.content }}</p>
+                                <p class="comment-timestamp">Commented on: {{ comment.timestamp }}</p>
+                                {% if comment.timestamp != comment.last_modified %}
+                                <p class="comment-timestamp">(Edited: {{ comment.last_modified }})</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="comment-actions">
+                            <div class="three-dots">⋮</div>
+                            <div class="dropdown">
+                                <a href="javascript:void(0);" class="update-button" data-comment-id="{{ comment.comment_id }}">Update</a>
+                                <a href="javascript:void(0);" class="delete-button" data-comment-id="{{ comment.comment_id }}">Delete</a>
+                                <a href="javascript:void(0);" class="reply-button" data-comment-id="{{ comment.comment_id }}">Reply</a>
+                            </div>
+                        </div>
+                        <div class="replies">
+                            {% for reply in comment.replies.all %}
+                            <div class="reply" data-reply-id="{{ reply.reply_id }}">
+                                <div class="reply-header">
+                                    {% if reply.member.profile_picture %}
+                                        <img src="{{ reply.member.profile_picture.url }}" alt="Profile Picture" class="reply-avatar" style="width: 25px; height: 25px; border-radius: 50%; margin-right: 10px;">
+                                    {% else %}
+                                        <img src="{% static 'default_profile_picture.png' %}" alt="Profile Picture" class="reply-avatar" style="width: 25px; height: 25px; border-radius: 50%; margin-right: 10px;">
+                                    {% endif %}
+                                    <p class="reply-username">{{ reply.member.username }}</p>
+                                    <div class="reply-body">
+                                        <p class="reply-content">{{ reply.content }}</p>
+                                        <p class="reply-timestamp">Replied on: {{ reply.timestamp }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     {% endfor %}

@@ -31,7 +31,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);    
         }
 
-        .main-content{ /*mao ni ga handle sa width sa my post content ug sa hello text within sa container na div*/
+        .main-content {
             width: 100%;
             padding: 20px;
         }
@@ -61,7 +61,7 @@
             border-radius: 50%;
             border: 4px solid white;
             position: absolute;
-            top: -60px;
+            
         }
 
         .update-profile {
@@ -231,7 +231,7 @@
 
         .votes {
             display: flex;
-            flex-direction: row; /* Change to row for horizontal alignment */
+            flex-direction: row;
             gap: 20px;
         }
 
@@ -288,7 +288,7 @@
     <script>
         $(document).ready(function() {
             $('.like-button, .dislike-button').click(function(event) {
-                event.stopPropagation(); // Prevent the click event from propagating to the post container
+                event.stopPropagation();
                 var postId = $(this).data('post-id');
                 var action = $(this).hasClass('like-button') ? 'like' : 'dislike';
                 var button = $(this);
@@ -334,11 +334,9 @@
                             });
                         }
 
-                        // Debugging logs
                         console.log('Like button src:', likeButton.attr('src'));
                         console.log('Dislike button src:', dislikeButton.attr('src'));
 
-                        // Update the counts
                         votesContainer.find('.likes-count').text(data.likes_count);
                         votesContainer.find('.dislikes-count').text(data.dislikes_count);
                     }
@@ -346,7 +344,7 @@
             });
 
             $('.three-dots').click(function(event) {
-                event.stopPropagation(); // Prevent the click event from propagating to the post container
+                event.stopPropagation();
                 $(this).siblings('.dropdown').toggle();
             });
 
@@ -356,9 +354,7 @@
                 }
             });
 
-            // Toggle comments section when clicking on the post container
             $(document).on('click', '.post', function(event) {
-                // Prevent the click event from propagating to child elements
                 if (!$(event.target).closest('.comment-form, .comment-actions, .like-button, .dislike-button, .three-dots, .dropdown').length) {
                     $(this).find('.comments').toggle();
                 }
@@ -371,9 +367,10 @@
         {% include '_sidebar.html' %}
         <div class="main-content">
             <div class="profile-header">
+                <img src="{{ user.profile_picture.url }}" alt="Profile" class="profile-pic">
                 <div class="profile-info">
-                    <div class="profile-name">Hello, {{ user.firstName }} {{ user.lastName }}</div>
-                    <div class="profile-email">{{ user.username }}</div>
+                    <div class="profile-name">Hello, {{ user.first_name }} {{ user.last_name }}</div>
+                    <div class="profile-email">{{ user.email }}</div>
                     <div class="profile-stats">
                         <span>Role: {{ user.role }}</span>
                         <span>Enrolled in {{ user.school }}</span>
@@ -436,6 +433,7 @@
                 </div>
                 {% endfor %}
             </div>
+        </div>
     </div>
 </body>
 </html>
