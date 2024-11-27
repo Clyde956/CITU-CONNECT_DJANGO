@@ -9,6 +9,7 @@ from .forms import CustomUserCreationForm, PostForm
 from .models import Notification, Post, Comment
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Count, Q
 
 def register(request):
     if request.method == 'POST':
@@ -158,8 +159,29 @@ def delete_comment(request, comment_id):
 
 @login_required
 def all_posts_view(request):
-    approved_posts = Post.objects.filter(status='approved').order_by('-timeStamp')  # Only fetch approved posts
-    return render(request, 'all_posts.html', {'posts': approved_posts, 'username': request.user.username})
+    category_filter = request.GET.get('category')
+    search_query = request.GET.get('search')
+
+    posts = Post.objects.filter(status='approved').order_by('-timeStamp')
+
+    if category_filter:
+        posts = posts.filter(categoryId__name=category_filter)
+
+    if search_query:
+        posts = posts.filter(Q(content__icontains=search_query) | Q(categoryId__name__icontains=search_query))
+
+    # Calculate trending categories
+    trending_categories = Post.objects.filter(status='approved').values('categoryId__name').annotate(
+        num_posts=Count('postId'),
+        num_comments=Count('comments'),
+        unique_commenters=Count('comments__member', distinct=True)
+    ).order_by('-num_posts', '-num_comments', '-unique_commenters')[:5]  # Get top 5 trending categories
+
+    return render(request, 'all_posts.html', {
+        'posts': posts,
+        'trending_categories': trending_categories,
+        'username': request.user.username
+    })
     #posts = Post.objects.filter(member__is_active=True)  # Fetch all posts by active users
     #print(len(posts))  # Debugging: Print the posts to the console
     #return render(request, 'all_posts.html', {'posts': posts})
