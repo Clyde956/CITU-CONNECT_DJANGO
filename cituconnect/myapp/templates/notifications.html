@@ -90,7 +90,7 @@
             {% endfor %}
             {% for notification in read_recent_notifications %}
                 <div class="notification">
-                    <p><b>{{ notification.content }}</b></p>
+                    <p>{{ notification.content }}</p>
                     <br>
                     <p class="notification-time">Received on: {{ notification.timeStamp }}</p>
                 </div>
@@ -100,7 +100,7 @@
         <div class="notifications">
             {% for notification in older_notifications %}
                 <div class="notification">
-                    <p><b>{{ notification.content }}</b></p>
+                    <p>{{ notification.content }}</p>
                     <br>
                     <p class="notification-time">Received on: {{ notification.timeStamp }}</p>
                 </div>
