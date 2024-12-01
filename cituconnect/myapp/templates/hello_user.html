@@ -377,13 +377,7 @@
         {% include '_sidebar.html' %}
         <div class="main-content">
             <div class="profile-header">
-                {% if post.isAnonymous %}
-                    <img src="{% static 'images/anonymous_avatar.jpg' %}" class="avatar" alt="Anonymous avatar">
-                {% elif post.member.profile_picture %}
-                    <img src="{{ post.member.profile_picture.url }}" class="avatar" alt="User avatar">
-                {% else %}
-                    <img src="{% static 'images/default_avatar.png' %}" class="avatar" alt="Default avatar">
-                {% endif %}
+                <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="Profile Picture" class="avatar">
                 <div class="profile-info">
                     <div class="profile-name">Hello, {{ user.firstName }} {{ user.lastName }}</div>
                     <div class="profile-email">{{ user.email }}</div>

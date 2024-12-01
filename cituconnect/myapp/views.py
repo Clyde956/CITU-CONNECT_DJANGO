@@ -17,7 +17,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('create_post')
+            return redirect('login')
         else:
             print(form.errors)
     else:
