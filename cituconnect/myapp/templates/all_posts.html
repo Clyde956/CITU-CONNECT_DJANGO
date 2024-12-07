@@ -4,195 +4,216 @@
   <head>
     <style>
       .like-button,
-      .dislike-button {
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-      }
+.dislike-button {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
 
-      .like-button.active {
-        content: url("{% static 'active_like.png' %}");
-      }
+.like-button.active {
+  content: url("{% static 'active_like.png' %}");
+}
 
-      .dislike-button.active {
-        content: url("{% static 'active_dislike.png' %}");
-      }
+.dislike-button.active {
+  content: url("{% static 'active_dislike.png' %}");
+}
 
-      .post-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
 
-      .three-dots {
-        cursor: pointer;
-        font-size: 24px;
-      }
+.three-dots {
+  cursor: pointer;
+  font-size: 24px;
+}
 
-      .dropdown {
-        display: none;
-        position: absolute;
-        top: 30px;
-        right: 10px;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        z-index: 1000; /* Ensure the dropdown appears above other elements */
-      }
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensure the dropdown appears above other elements */
+}
 
-      .dropdown a {
-        display: block;
-        padding: 10px;
-        text-decoration: none;
-        color: #333;
-      }
+.dropdown a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+}
 
-      .dropdown a:hover {
-        background: #f0f0f0;
-      }
+.dropdown a:hover {
+  background: #f0f0f0;
+}
 
-      .comment {
-        position: relative; /* Ensure the dropdown is positioned correctly */
-        background: #f9f9f9;
-        padding: 10px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
+.comment {
+  position: relative; /* Ensure the dropdown is positioned correctly */
+  background: #f9f9f9;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-      .comment-header {
-        display: flex;
-        align-items: center;
-      }
-
-      .comment-avatar {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
-
-      .comment-body {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .comment-username {
-        font-weight: bold;
-        margin-right: 10px;
-      }
-
-      .comment-content {
-        margin-bottom: 5px;
-      }
-
-      .comment-timestamp {
-        font-size: 12px;
-        color: #888;
-      }
-
-      .comment-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-      }
-
-      .comment-actions a {
-        color: #007bff;
-        text-decoration: none;
-        font-size: 14px;
-      }
-
-      .comment-actions a:hover {
-        text-decoration: underline;
-      }
-
-      .comment-form {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      .comment-form input[type="text"] {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-      }
-
-      .comment-form button {
-        padding: 10px 20px;
-        background: #02bb2a;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .comment-form button:hover {
-        background: #00b35a;
-      }
-      .trending {
-            background: #8B0000; /* Maroon color */
-            padding: 20px;
-            border-radius: 10px;
-            width: 250px;
-            color: white;
-            z-index: 1;
+.comment-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #d9d9d9; /* Placeholder gray */
+            border-radius: 50%;
+            margin-right: 15px;
         }
- 
-        .fixed-trending {
-            position: fixed;
-            top: 20px;
-            right: 150px;
-            width: 250px;
-            height: 100%;
-            background-color: #8B0000; /* Maroon color */
-            padding: 10px;
-            border: px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
- 
-        .trending h3 {
-            text-align: center;
-            color: white;
-            margin-top: 20px;
-        }
- 
-        .trending-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
- 
-        .trending-item:hover{
-            background-color: #ffee8d;
-            border-radius: 10px;
-        }
- 
-        .trending-item a {
-            color: white;
-            text-decoration: none;
-            flex: 1;
-        }
- 
-        .trending-item a:hover {
-            color: black;
-        }
- 
-        .trending-rank {
-            background: #FFD700; /* Yellow color */
-            color: black;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-right: 10px;
-            font-weight: bold;
-        }
+
+.comment-body {
+  flex: 1;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.comment-username {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  max-width: 400px;
+  border-left: 5px solid #0066ff; /* Blue border on the left */
+}
+
+.comment-content {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.comment-timestamp {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.comment-actions a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.comment-actions a:hover {
+  text-decoration: underline;
+}
+
+.comment-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.comment-form input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.comment-form button {
+  padding: 10px 20px;
+  background: #02bb2a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background: #00b35a;
+}
+
+.comment-user {
+  background-color: #d4edda; /* Light green background for user's own comments */
+}
+
+.trending {
+  background: #8b0000; /* Maroon color */
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  color: white;
+  z-index: 1;
+}
+
+.fixed-trending {
+  position: fixed;
+  top: 20px;
+  right: 150px;
+  width: 250px;
+  height: 100%;
+  background-color: #8b0000; /* Maroon color */
+  padding: 10px;
+  border: px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.trending h3 {
+  text-align: center;
+  color: white;
+  margin-top: 20px;
+}
+
+.trending-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.trending-item:hover {
+  background-color: #ffee8d;
+  border-radius: 10px;
+}
+
+.trending-item a {
+  color: white;
+  text-decoration: none;
+  flex: 1;
+}
+
+.trending-item a:hover {
+  color: black;
+}
+
+.trending-rank {
+  background: #ffd700; /* Yellow color */
+  color: black;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+  font-weight: bold;
+}
     </style>
 
     <link
@@ -203,6 +224,21 @@
     <link rel="stylesheet" type="text/css" href="{% static '_sidebar.css' %}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+function formatDateTime(dateTimeStr) {
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+    timeZone: 'Asia/Manila'
+  };
+  const date = new Date(dateTimeStr);
+  return date.toLocaleString('en-US', options);
+}
+
+
       $(document).ready(function () {
         $(".like-button, .dislike-button").click(function () {
           var postId = $(this).data("post-id");
@@ -284,223 +320,161 @@
         });
 
         $(".comment-form").submit(function (e) {
-          e.preventDefault();
-          var postId = $(this).data("post-id");
-          var commentContent = $(this).find('input[name="content"]').val();
-          var form = $(this);
-          if (commentContent) {
-            $.ajax({
-              url: "/add_comment/" + postId + "/",
-              method: "POST",
-              headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-              },
-              data: {
-                content: commentContent,
-              },
-              success: function (data) {
-                if (data.status === "success") {
-                  // Show success popup
-                  var popup = $(
-                    '<div class="popup">Comment successfully added.</div>'
-                  );
-                  $("body").append(popup);
-                  popup.fadeIn();
-                  setTimeout(function () {
-                    popup.fadeOut(function () {
-                      popup.remove();
-                    });
-                  }, 3000);
+      e.preventDefault();
+      var postId = $(this).data("post-id");
+      var commentContent = $(this).find('input[name="content"]').val();
+      var form = $(this);
+      if (commentContent) {
+        $.ajax({
+          url: "/add_comment/" + postId + "/",
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          data: {
+            content: commentContent,
+          },
+          success: function (data) {
+            if (data.status === "success") {
+              // Show success popup
+              var popup = $('<div class="popup">Comment successfully added.</div>');
+              $("body").append(popup);
+              popup.fadeIn();
+              setTimeout(function () {
+                popup.fadeOut(function () {
+                  popup.remove();
+                });
+              }, 3000);
 
-                  // Dynamically add the new comment to the DOM
-                  var newComment = `
-                                    <div class="comment" data-comment-id="${data.comment_id}">
-                                        <div class="comment-header">
-                                            <img src="${data.profile_picture_url}" alt="Profile Picture" class="comment-avatar">
-                                            <div class="comment-body">
-                                                <p class="comment-username">{{ user.username }}</p>
-                                                <p class="comment-content">${commentContent}</p>
-                                                <p class="comment-timestamp">Just now</p>
-                                            </div>
-                                        </div>
-                                        <div class="comment-actions">
-                                            <div class="three-dots">⋮</div>
-                                            <div class="dropdown">
-                                                <a href="javascript:void(0);" class="update-button" data-comment-id="${data.comment_id}">Update</a>
-                                                <a href="javascript:void(0);" class="delete-button" data-comment-id="${data.comment_id}">Delete</a>
-                                                <a href="javascript:void(0);" class="reply-button" data-comment-id="${data.comment_id}">Reply</a>
-                                            </div>
-                                        </div>
-                                        <div class="replies"></div>
-                                    </div>
-                                `;
-                  form
-                    .closest(".post-container")
-                    .find(".comments")
-                    .prepend(newComment); // Prepend the new comment
-                  form.find('input[name="content"]').val(""); // Clear the input field
-                } else {
-                  alert("Error adding comment.");
-                }
-              },
-            });
+              // Dynamically add the new comment to the DOM
+              var newComment = `
+                <div class="comment" data-comment-id="${data.comment_id}">
+                  <div class="comment-avatar">
+                    <img src="${data.profile_picture_url}" alt="Profile Picture" class="comment-avatar">
+                  </div>
+                  <div class="comment-body">
+                    <div class="comment-header">
+                      <p class="comment-username">${data.username}</p>
+                    </div>
+                    <div class="comment-container">
+                      <p class="comment-content">${commentContent}</p>
+                      <p class="comment-timestamp">Commented on: Just now</p>
+                    </div>
+                  </div>
+                  <div class="comment-actions">
+                    <div class="three-dots">⋮</div>
+                    <div class="dropdown">
+                      <a href="javascript:void(0);" class="update-button" data-comment-id="${data.comment_id}">Update</a>
+                      <a href="javascript:void(0);" class="delete-button" data-comment-id="${data.comment_id}">Delete</a>
+                    </div>
+                  </div>
+                </div>
+              `;
+              form.closest(".post-container").find(".comments").prepend(newComment); // Prepend the new comment
+              form.find('input[name="content"]').val(""); // Clear the input field
+            } else {
+              alert("Error adding comment.");
+            }
+          },
+        });
+      }
+    });
+
+    $(document).on("click", ".three-dots", function (event) {
+      event.stopPropagation();
+      console.log("Three dots clicked");
+      $(this).siblings(".dropdown").toggle();
+    });
+
+    $(document).on("click", ".update-button", function () {
+      var commentId = $(this).data("comment-id");
+      var commentContent = $(this).closest(".comment").find(".comment-content").text();
+      $("#updateCommentModal").find("textarea").val(commentContent);
+      $("#updateCommentModal").data("comment-id", commentId).show();
+    });
+
+    $(document).on("click", ".delete-button", function () {
+      var commentId = $(this).data("comment-id");
+      $("#confirmDeleteModal").data("comment-id", commentId).show();
+    });
+
+    $("#confirmDeleteButton").click(function () {
+      var commentId = $("#confirmDeleteModal").data("comment-id");
+      $.ajax({
+        url: "/delete_comment/" + commentId + "/",
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        success: function (data) {
+          if (data.status === "success") {
+            // Remove the comment from the UI
+            $('.comment[data-comment-id="' + commentId + '"]').remove();
+            $("#confirmDeleteModal").hide();
+          } else {
+            alert("Error deleting comment.");
           }
-        });
-
-        $(document).on("click", ".three-dots", function (event) {
-          event.stopPropagation();
-          console.log("Three dots clicked");
-          $(this).siblings(".dropdown").toggle();
-        });
-
-        $(document).on("click", ".update-button", function () {
-          var commentId = $(this).data("comment-id");
-          var commentContent = $(this)
-            .closest(".comment")
-            .find(".comment-content")
-            .text();
-          $("#updateCommentModal").find("textarea").val(commentContent);
-          $("#updateCommentModal").data("comment-id", commentId).show();
-        });
-
-        $(document).on("click", ".delete-button", function () {
-          var commentId = $(this).data("comment-id");
-          $("#confirmDeleteModal").data("comment-id", commentId).show();
-        });
-
-        $(document).on("click", ".reply-button", function () {
-          var commentId = $(this).data("comment-id");
-          var replyForm = `
-                    <form class="reply-form" data-comment-id="${commentId}">
-                        {% csrf_token %}
-                        <input type="text" name="content" placeholder="Reply to this comment">
-                        <button type="submit">Reply</button>
-                    </form>
-                `;
-          $(this).closest(".comment").find(".replies").append(replyForm);
-        });
-
-        $(document).on("submit", ".reply-form", function (e) {
-          e.preventDefault();
-          var commentId = $(this).data("comment-id");
-          var replyContent = $(this).find('input[name="content"]').val();
-          var form = $(this);
-          if (replyContent) {
-            $.ajax({
-              url: "/add_reply/" + commentId + "/",
-              method: "POST",
-              headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-              },
-              data: {
-                content: replyContent,
-              },
-              success: function (data) {
-                if (data.status === "success") {
-                  // Show success popup
-                  var popup = $(
-                    '<div class="popup">Reply successfully added.</div>'
-                  );
-                  $("body").append(popup);
-                  popup.fadeIn();
-                  setTimeout(function () {
-                    popup.fadeOut(function () {
-                      popup.remove();
-                    });
-                  }, 3000);
-
-                  // Dynamically add the new reply to the DOM
-                  var newReply = `
-                                    <div class="reply" data-reply-id="${data.reply_id}">
-                                        <div class="reply-header">
-                                            <img src="${data.profile_picture_url}" alt="Profile Picture" class="reply-avatar">
-                                            <div class="reply-body">
-                                                <p class="reply-username">{{ user.username }}</p>
-                                                <p class="reply-content">${replyContent}</p>
-                                                <p class="reply-timestamp">Just now</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                  form.closest(".replies").prepend(newReply); // Prepend the new reply
-                  form.remove(); // Remove the reply form
-                } else {
-                  alert("Error adding reply.");
-                }
-              },
-            });
-          }
-        });
-
-        $("#confirmDeleteButton").click(function () {
-          var commentId = $("#confirmDeleteModal").data("comment-id");
-          $.ajax({
-            url: "/delete_comment/" + commentId + "/",
-            method: "POST",
-            headers: {
-              "X-CSRFToken": "{{ csrf_token }}",
-            },
-            success: function (data) {
-              if (data.status === "success") {
-                // Remove the comment from the UI
-                $('.comment[data-comment-id="' + commentId + '"]').remove();
-                $("#confirmDeleteModal").hide();
-              } else {
-                alert("Error deleting comment.");
-              }
-            },
-          });
-        });
-
-        $("#cancelDeleteButton, .close").click(function () {
-          $("#confirmDeleteModal").hide();
-        });
-
-        $("#updateCommentForm").submit(function (e) {
-          e.preventDefault();
-          var commentId = $("#updateCommentModal").data("comment-id");
-          var newContent = $("#updateCommentModal").find("textarea").val();
-          $.ajax({
-            url: "/update_comment/" + commentId + "/",
-            method: "POST",
-            headers: {
-              "X-CSRFToken": "{{ csrf_token }}",
-            },
-            data: {
-              content: newContent,
-            },
-            success: function (data) {
-              if (data.status === "success") {
-                // Update the comment content in the UI
-                $('.comment[data-comment-id="' + commentId + '"]')
-                  .find(".comment-content")
-                  .text(newContent);
-                $("#updateCommentModal").hide();
-              } else {
-                alert("Error updating comment.");
-              }
-            },
-          });
-        });
-
-        $(document).click(function (event) {
-          if (!$(event.target).closest(".three-dots, .dropdown").length) {
-            $(".dropdown").hide();
-          }
-        });
-
-        $(".post-container").click(function (event) {
-          // Prevent the click event from propagating to child elements
-          if (
-            !$(event.target).closest(
-              ".comment-form, .comment-actions, .like-button, .dislike-button"
-            ).length
-          ) {
-            $(this).find(".comments").toggle();
-          }
-        });
+        },
       });
-    </script>
+    });
+
+    $("#cancelDeleteButton, .close").click(function () {
+      $("#confirmDeleteModal").hide();
+    });
+
+    $("#updateCommentForm").submit(function (e) {
+      e.preventDefault();
+      var commentId = $("#updateCommentModal").data("comment-id");
+      var newContent = $("#updateCommentModal").find("textarea").val();
+      $.ajax({
+        url: "/update_comment/" + commentId + "/",
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        data: {
+          content: newContent,
+        },
+        success: function (data) {
+          if (data.status === "success") {
+            // Update the comment content and timestamps in the UI
+            var commentElement = $('.comment[data-comment-id="' + commentId + '"]');
+            commentElement.find(".comment-content").text(newContent);
+            commentElement.find(".comment-timestamp").html(`
+              Commented on: ${data.timestamp}<br>
+              Edited: ${data.last_modified}
+            `);
+            $("#updateCommentModal").hide();
+          } else {
+            alert("Error updating comment.");
+          }
+        },
+      });
+    });
+
+    $(document).click(function (event) {
+      if (!$(event.target).closest(".three-dots, .dropdown").length) {
+        $(".dropdown").hide();
+      }
+    });
+
+    $(".post-container").click(function (event) {
+      // Prevent the click event from propagating to child elements
+      if (
+        !$(event.target).closest(
+          ".comment-form, .comment-actions, .like-button, .dislike-button"
+        ).length
+      ) {
+        $(this).find(".comments").toggle();
+      }
+    });
+
+    // Ensure the close button works for both modals
+    $(".close").click(function () {
+      $(this).closest(".modal").hide();
+    });
+  });
+</script>
   </head>
   <body>
     <div class="container">
@@ -609,109 +583,37 @@
           </form>
           <div class="comments">
             {% for comment in post.comments.all reversed %}
-            <div class="comment" data-comment-id="{{ comment.comment_id }}">
-              <div class="comment-header">
-                {% if comment.member.profile_picture %}
-                <img
-                  src="{{ comment.member.profile_picture.url }}"
-                  alt="Profile Picture"
-                  class="comment-avatar"
-                  style="
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    margin-right: 10px;
-                  "
-                />
-                {% else %}
-                <img
-                  src="{% static 'images/default_avatar.png' %}"
-                  alt="Profile Picture"
-                  class="comment-avatar"
-                  style="
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    margin-right: 10px;
-                  "
-                />
-                {% endif %}
-                <p class="comment-username">{{ comment.member.username }}</p>
-                <div class="comment-body">
-                  <p class="comment-content">{{ comment.content }}</p>
-                  <p class="comment-timestamp">
-                    Commented on: {{ comment.timestamp }}
-                  </p>
-                  {% if comment.timestamp != comment.last_modified %}
-                  <p class="comment-timestamp">
-                    (Edited: {{ comment.last_modified }})
-                  </p>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="comment-actions">
-                <div class="three-dots">⋮</div>
-                <div class="dropdown">
-                  <a
-                    href="javascript:void(0);"
-                    class="update-button"
-                    data-comment-id="{{ comment.comment_id }}"
-                    >Update</a
-                  >
-                  <a
-                    href="javascript:void(0);"
-                    class="delete-button"
-                    data-comment-id="{{ comment.comment_id }}"
-                    >Delete</a
-                  >
-                  <a
-                    href="javascript:void(0);"
-                    class="reply-button"
-                    data-comment-id="{{ comment.comment_id }}"
-                    >Reply</a
-                  >
-                </div>
-              </div>
-              <div class="replies">
-                {% for reply in comment.replies.all %}
-                <div class="reply" data-reply-id="{{ reply.reply_id }}">
-                  <div class="reply-header">
-                    {% if reply.member.profile_picture %}
-                    <img
-                      src="{{ reply.member.profile_picture.url }}"
-                      alt="Profile Picture"
-                      class="reply-avatar"
-                      style="
-                        width: 25px;
-                        height: 25px;
-                        border-radius: 50%;
-                        margin-right: 10px;
-                      "
-                    />
+            <div class="comment {% if comment.member == user %}comment-user{% endif %}" data-comment-id="{{ comment.comment_id }}">
+                <div class="comment-avatar">
+                    {% if comment.member.profile_picture %}
+                    <img src="{{ comment.member.profile_picture.url }}" alt="Profile Picture" class="comment-avatar">
                     {% else %}
-                    <img
-                      src="{% static 'default_profile_picture.png' %}"
-                      alt="Profile Picture"
-                      class="reply-avatar"
-                      style="
-                        width: 25px;
-                        height: 25px;
-                        border-radius: 50%;
-                        margin-right: 10px;
-                      "
-                    />
+                    <img src="{% static 'profile_pictures/default_profile.jpg' %}" alt="Profile Picture" class="comment-avatar">
                     {% endif %}
-                    <p class="reply-username">{{ reply.member.username }}</p>
-                    <div class="reply-body">
-                      <p class="reply-content">{{ reply.content }}</p>
-                      <p class="reply-timestamp">
-                        Replied on: {{ reply.timestamp }}
-                      </p>
-                    </div>
-                  </div>
                 </div>
-                {% endfor %}
-              </div>
+                <div class="comment-body">
+                    <div class="comment-header">
+                        <p class="comment-username">{{ comment.member.username }}</p>
+                    </div>
+                    <div class="comment-container">
+                        <p class="comment-content">{{ comment.content }}</p>
+                        <p class="comment-timestamp">
+                            Commented on: {{ comment.timestamp|date:"M. j, Y, g:i a" }}
+                            {% if comment.timestamp != comment.last_modified %}
+                            <br>Edited: {{ comment.last_modified|date:"M. j, Y, g:i a" }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="comment-actions">
+                    {% if comment.member == user %}
+                    <div class="three-dots">⋮</div>
+                    <div class="dropdown">
+                        <a href="javascript:void(0);" class="update-button" data-comment-id="{{ comment.comment_id }}">Update</a>
+                        <a href="javascript:void(0);" class="delete-button" data-comment-id="{{ comment.comment_id }}">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
           </div>
