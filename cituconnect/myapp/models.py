@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils import timezone
+from django.templatetags.static import static
 
 class School(models.Model):
     name = models.CharField(max_length=255)
@@ -11,6 +12,7 @@ class School(models.Model):
         return self.name
 
 class User(AbstractUser):
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, default='profile_pictures/default_profile.jpg')
     member_id = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
@@ -19,11 +21,9 @@ class User(AbstractUser):
         ('staff', 'Staff'),
         ('faculty', 'Faculty'),
     ])
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
     school = models.ForeignKey('School', on_delete=models.CASCADE, null=True, blank=True)
     groups = models.ManyToManyField(Group, related_name='custom_user_set')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set_permissions')
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)  # Add this line
 
 class Category(models.Model):
     categoryId = models.AutoField(primary_key=True)
@@ -69,7 +69,6 @@ class Comment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
-# cituconnect/myapp/models.py
 class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
     content = models.TextField()

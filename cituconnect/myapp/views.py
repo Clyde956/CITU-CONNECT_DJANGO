@@ -10,6 +10,9 @@ from .models import Notification, Post, Comment
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Count, Q
+from django.utils.timezone import localtime
+from django.utils.dateformat import format
+
 
 def register(request):
     if request.method == 'POST':
@@ -115,6 +118,7 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+# cituconnect/myapp/views.py
 @login_required
 def add_comment(request, post_id):
     if request.method == 'POST':
@@ -127,9 +131,19 @@ def add_comment(request, post_id):
             notification_content = f"{request.user.username} commented on your post: {post.content[:20]}"
             Notification.objects.create(content=notification_content, recipient=post.member)
         
-        return JsonResponse({'status': 'success', 'comment_id': comment.comment_id})
+        profile_picture_url = request.user.profile_picture.url if request.user.profile_picture else static('profile_pictures/default_profile.jpg')
+        
+        return JsonResponse({
+            'status': 'success',
+            'comment_id': comment.comment_id,
+            'profile_picture_url': profile_picture_url,
+            'username': request.user.username
+        })
 
     return JsonResponse({'status': 'error'})
+
+# cituconnect/myapp/views.py
+from django.utils.timezone import localtime
 
 @csrf_exempt
 @login_required
@@ -140,7 +154,13 @@ def update_comment(request, comment_id):
         if new_content:
             comment.content = new_content
             comment.save()
-            return JsonResponse({'status': 'success'})
+            timestamp = format(localtime(comment.timestamp), 'M. j, Y, g:i a')
+            last_modified = format(localtime(comment.last_modified), 'M. j, Y, g:i a')
+            return JsonResponse({
+                'status': 'success',
+                'timestamp': timestamp,
+                'last_modified': last_modified
+            })
     return JsonResponse({'status': 'error'})
 
 @login_required
@@ -148,7 +168,6 @@ def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, comment_id=comment_id, member=request.user)
     if request.method == 'POST':
         comment.delete()
-        #return redirect('hello_user')
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
     #return render(request, 'delete_comment.html', {'comment': comment})
