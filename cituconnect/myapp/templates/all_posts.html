@@ -214,6 +214,10 @@
   margin-right: 10px;
   font-weight: bold;
 }
+
+.move-lower {
+    margin-top: 20px; /* Adjust the value as needed */
+}
     </style>
 
     <link
@@ -488,11 +492,11 @@ function formatDateTime(dateTimeStr) {
             <!-- Line 79 -->
           </div>
           <button
-            class="new-button"
-            onclick="window.location.href='{% url 'create_post' %}'"
-          >
-            New Report
-          </button>
+    class="new-button move-lower"
+    onclick="window.location.href='{% url 'create_post' %}'"
+>
+    New Report
+</button>
           <form method="GET" action="{% url 'all_posts' %}" class="search-form">
             <input type="search" name="search" class="search" placeholder="Search...">
             <button type="submit">Search</button>
@@ -520,7 +524,7 @@ function formatDateTime(dateTimeStr) {
             />
             {% else %}
             <img
-              src="{% static 'images/default_avatar.png' %}"
+              src="{% static 'images/default_profile.jng' %}"
               class="avatar"
               alt="Default avatar"
             />

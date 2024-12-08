@@ -188,10 +188,10 @@
             <div class="card">
                 <div class="profile-header">
                     {% if user.profile_picture %}
-                        <img src="{{ user.profile_picture.url }}" alt="Profile" class="profile-pic">
-                    {% else %}
-                        <img src="{% static 'images/default_avatar.png' %}" alt="Profile" class="profile-pic">
-                    {% endif %}
+                    <img src="{{ user.profile_picture.url }}" alt="Profile" class="profile-pic">
+                {% else %}
+                    <img src="{% static 'images/default_profile.jpg' %}" alt="Profile" class="profile-pic">
+                {% endif %}
                     <div class="profile-info">
                         <h2>{{ user.firstName }} {{ user.lastName }}</h2>
                         <p>{{ user.email }}</p>

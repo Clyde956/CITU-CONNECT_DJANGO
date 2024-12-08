@@ -11,26 +11,27 @@
             padding: 0;
             box-sizing: border-box;
         }
- 
+
         body {
             font-family: 'Arial', sans-serif;
             background-color: #fdf6e3;
             color: #3d0000;
             line-height: 1.6;
         }
- 
+
         header {
             background-color: #800000;
             padding: 15px 0;
             display: flex;
             justify-content: flex-end;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: slideInDown 1s ease-in-out;
         }
- 
+
         nav {
             margin-right: 20px;
         }
- 
+
         .nav-link {
             text-decoration: none;
             color: #ffd700;
@@ -41,18 +42,18 @@
             font-weight: bold;
             transition: all 0.3s ease;
         }
- 
+
         .nav-link:hover {
             background-color: #ffd700;
             color: #800000;
         }
- 
+
         main {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
- 
+
         .hero-section {
             text-align: center;
             background-color: rgba(255, 255, 255, 0.9);
@@ -60,30 +61,31 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 40px;
+            animation: fadeIn 1s ease-in-out;
         }
- 
+
         .hero-title {
             font-size: 48px;
             margin-bottom: 20px;
             color: #333;
         }
- 
+
         .highlight {
             color: #FFB71B;
         }
- 
+
         .hero-subtitle {
             font-size: 36px;
             margin-bottom: 30px;
         }
- 
+
         .hero-text {
             max-width: 800px;
             margin: 0 auto 30px;
             font-size: 18px;
             color: #4F4F4F;
         }
- 
+
         .get_started_button {
             background-color: #FFB71B;
             color: #000;
@@ -95,70 +97,47 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
- 
+
         .get_started_button:hover {
             background-color: #FFA700;
         }
- 
+
         .section {
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             padding: 40px;
             margin-bottom: 40px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
         }
- 
+
         .section-title {
             font-size: 36px;
             color: #333;
             margin-bottom: 30px;
             text-align: center;
         }
- 
-        /* New About Us Styles */
+
         .about-us-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 0 20px;
         }
- 
+
         .about-us-text {
             font-size: 18px;
             color: #4F4F4F;
             line-height: 1.6;
             margin-bottom: 24px;
         }
- 
-        .mission-container {
-            margin: 32px 0;
-        }
- 
-        .mission-title {
-            margin-bottom: 16px;
-            font-weight: 600;
-        }
- 
-        .about-us-list {
-            list-style-type: disc;
-            margin-left: 40px;
-            margin-bottom: 24px;
-        }
- 
-        .about-us-list li {
-            margin-bottom: 12px;
-            padding-left: 8px;
-            line-height: 1.5;
-            color: #4F4F4F;
-            font-size: 18px;
-        }
- 
+
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             padding: 20px;
         }
- 
+
         .feature-card {
             background-color: white;
             padding: 30px;
@@ -166,41 +145,43 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
             transition: transform 0.3s ease;
+            animation: fadeInUp 1s ease-in-out;
         }
- 
+
         .feature-card:hover {
             transform: translateY(-5px);
         }
- 
+
         .feature-icon {
             font-size: 40px;
             color: #FFB71B;
             margin-bottom: 20px;
         }
- 
+
         .feature-title {
             font-size: 24px;
             margin-bottom: 15px;
             color: #333;
         }
- 
+
         .feature-text {
             color: #666;
         }
- 
+
         .steps-container {
             max-width: 800px;
             margin: 0 auto;
         }
- 
+
         .step {
             margin-bottom: 20px;
             padding: 20px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
         }
- 
+
         .footer {
             background-color: #333;
             color: white;
@@ -208,12 +189,13 @@
             padding: 40px 20px;
             border-radius: 12px;
             margin-top: 40px;
+            animation: fadeIn 1s ease-in-out;
         }
- 
+
         .social-icons {
             margin: 20px 0;
         }
- 
+
         .social-icons a {
             color: white;
             font-size: 24px;
@@ -221,32 +203,63 @@
             text-decoration: none;
             transition: color 0.3s ease;
         }
- 
+
         .social-icons a:hover {
             color: #FFB71B;
         }
- 
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 36px;
             }
- 
+
             .hero-subtitle {
                 font-size: 28px;
             }
- 
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
- 
+
             .about-us-container {
                 padding: 0 16px;
             }
- 
+
             .about-us-text {
                 font-size: 16px;
             }
- 
+
             .about-us-list li {
                 font-size: 16px;
             }
@@ -260,7 +273,7 @@
             <a href="{% url 'register' %}" class="nav-link">Register</a>
         </nav>
     </header>
- 
+
     <main>
         <section class="hero-section">
             <h1 class="hero-title">Welcome to <span class="highlight">CITU-CONNECT</span></h1>
@@ -270,21 +283,19 @@
             </p>
             <button class="get_started_button" onclick="window.location.href='{% url 'register' %}'">Get Started</button>
         </section>
- 
-        <!-- Modified About Us Section -->
+
         <section class="section">
             <h2 class="section-title">About Us</h2>
             <div class="about-us-container">
                 <p class="about-us-text">
                     CITU-CONNECT is more than a platform; it's a solution designed to unify and strengthen communication within our school. We believe in the power of open dialogue to build trust and drive meaningful change.
                 </p>
-               
                 <p class="about-us-text">
                     CITU-CONNECT is committed to creating a safe, inclusive space where your voice leads the way to improvement.
                 </p>
             </div>
         </section>
- 
+
         <section class="section">
             <h2 class="section-title">Features</h2>
             <div class="features-grid">
@@ -320,7 +331,7 @@
                 </div>
             </div>
         </section>
- 
+
         <section class="section">
             <h2 class="section-title">How It Works</h2>
             <div class="steps-container">
@@ -338,7 +349,7 @@
                 </div>
             </div>
         </section>
- 
+
         <footer class="footer">
             <h2>Stay Connected</h2>
             <p>Follow us on social media for updates and news!</p>
