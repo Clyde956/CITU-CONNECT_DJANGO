@@ -1,9 +1,9 @@
-<!-- cituconnect/myapp/templates/_sidebar.html -->
+{% load static %}
 {% load custom_tags %}
 
 <div class="sidebar fixed-sidebar">
     <div class="logo-section">
-        <div class="logo"></div>
+        <img src="{% static 'images/CITU_CONNECT_LOGO.png' %}" alt="CITU-CONNECT Logo" class="sidebar-logo">
         <br>
         <h2>CITU <br>CONNECT</h2>
     </div>
@@ -29,4 +29,12 @@
     font-weight: bold;
     margin-left: 10px;
 }
+
+.sidebar-logo {
+    max-width: 95px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
 </style>
+

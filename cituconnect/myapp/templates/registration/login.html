@@ -3,6 +3,28 @@
 <head>
     <title>Login</title>
     <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             display: flex;
@@ -18,6 +40,7 @@
             align-items: center;
             padding: 40px;
             box-sizing: border-box;
+            animation: slideInLeft 1s ease-in-out;
         }
         .left-panel h1 {
             color: #800000;
@@ -49,6 +72,7 @@
             align-items: center;
             padding: 60px 40px; 
             box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
         }
         .right-panel h2 {
             color: #8b0000;
@@ -77,6 +101,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            animation: fadeIn 1s ease-in-out;
         }
         .login-form input {
             width: 100%;
@@ -110,6 +135,7 @@
             text-align: left;
             width: 100%;
             max-width: 350px;
+            animation: fadeIn 1s ease-in-out;
         }
         .login-footer a {
             color: #8b0000;
@@ -125,6 +151,7 @@
             text-align: left;
             width: 100%;
             max-width: 350px;
+            animation: fadeIn 1s ease-in-out;
         }
         .admin-login a {
             color: #007BFF;
