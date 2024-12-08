@@ -4,6 +4,71 @@
 <head>
 <link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '_sidebar.css' %}">
+<style>
+  .modal-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+  }
+e
+  .modal-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  #approveButton {
+      background-color: #28a745; /* Green */
+      color: white;
+  }
+
+  #approveButton:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+  }
+
+  #rejectButton {
+      background-color: #dc3545; /* Red */
+      color: white;
+  }
+
+  #rejectButton:hover {
+      background-color: #c82333;
+      transform: scale(1.05);
+  }
+
+  .modal-content {
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-content h2 {
+      margin-bottom: 20px;
+  }
+
+  .modal-content p {
+      margin-bottom: 10px;
+  }
+
+  .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+  }
+</style>
 </head>
 <body>
     {% include '_sidebar.html' with is_admin=True %}
@@ -24,7 +89,7 @@
                         {% elif post.member.profile_picture %}
                             <img src="{{ post.member.profile_picture.url }}" class="avatar" alt="User avatar">
                         {% else %}
-                            <img src="{% static 'images/default_avatar.png' %}" class="avatar" alt="Default avatar">
+                            <img src="{% static 'images/default_profile.jpg' %}" class="avatar" alt="Default avatar">
                         {% endif %}
                         <div>
                             <span class="name">{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}</span>
@@ -39,16 +104,16 @@
     </div>
 
     <!-- The Modal -->
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <div id="modalDetails"></div>
-        <div class="modal-buttons">
-          <button id="approveButton">Approve</button>
-          <button id="rejectButton">Reject</button>
-        </div>
-      </div>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modalDetails"></div>
+    <div class="modal-buttons">
+      <button id="approveButton">Approve</button>
+      <button id="rejectButton">Reject</button>
     </div>
+  </div>
+</div>
 
 <script>
 function showModal(element) {
@@ -132,3 +197,4 @@ document.getElementById('rejectButton').addEventListener('click', function() {
 </script>
 </body>
 </html>
+
