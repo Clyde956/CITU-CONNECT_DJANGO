@@ -3,10 +3,12 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '_sidebar.css' %}">
 </head>
 <body>
+    {% include '_sidebar.html' with is_admin=True %}
     <h1>Welcome back Admin, <br>{{ username }}!</h1>
-    <h3>These posts awaits for your reviewing</h3>
+    <h3>These posts await your review</h3>
     <div class="container">
         <div class="header">
             <div class="headertitles">Username</div>
@@ -15,7 +17,7 @@
         </div>
         {% for post in posts %}
             {% if post.status == "pending" %}
-                <div class="row" onclick="showModal(this)" data-username="{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}" data-content="{{ post.content }}" data-priority="{{ post.priorityLevel }}" data-date="{{ post.timeStamp }}" data-status="{{ post.status }}">
+                <div class="row" onclick="showModal(this)" data-post-id="{{ post.postId }}" data-username="{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}" data-content="{{ post.content }}" data-priority="{{ post.priorityLevel }}" data-date="{{ post.timeStamp }}" data-status="{{ post.status }}">
                     <div class="user-info">
                         {% if post.isAnonymous %}
                             <img src="{% static 'images/anonymous_avatar.jpg' %}" class="avatar" alt="Anonymous avatar">
@@ -41,12 +43,17 @@
       <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <div id="modalDetails"></div>
+        <div class="modal-buttons">
+          <button id="approveButton">Approve</button>
+          <button id="rejectButton">Reject</button>
+        </div>
       </div>
     </div>
 
 <script>
 function showModal(element) {
   // Fetch post details from data attributes
+  const postId = element.getAttribute('data-post-id');
   const username = element.getAttribute('data-username');
   const content = element.getAttribute('data-content');
   const priority = element.getAttribute('data-priority');
@@ -61,6 +68,7 @@ function showModal(element) {
     <p><strong>Priority:</strong> ${priority}</p>
     <p><strong>Date Submitted:</strong> ${dateSubmitted}</p>
     <p><strong>Status:</strong> ${status}</p>
+    <input type="hidden" id="postId" value="${postId}">
   `;
 
   // Show the modal
@@ -77,6 +85,50 @@ window.onclick = function(event) {
     closeModal();
   }
 }
+
+// Add event listener to the approve button
+document.getElementById('approveButton').addEventListener('click', function() {
+  const postId = document.getElementById('postId').value;
+  fetch(`/custom-admin/update_post_status/${postId}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify({ status: 'approved' })  // Change status to 'approved'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      closeModal();
+      location.reload(); // Reload the page to reflect the changes
+    } else {
+      alert('Error approving post');
+    }
+  });
+});
+
+// Add event listener to the reject button
+document.getElementById('rejectButton').addEventListener('click', function() {
+  const postId = document.getElementById('postId').value;
+  fetch(`/custom-admin/update_post_status/${postId}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify({ status: 'rejected' })  // Change status to 'rejected'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      closeModal();
+      location.reload(); // Reload the page to reflect the changes
+    } else {
+      alert('Error rejecting post');
+    }
+  });
+});
 </script>
 </body>
 </html>
