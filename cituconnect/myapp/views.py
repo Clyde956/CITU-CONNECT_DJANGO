@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm, PostForm, UserProfileForm
@@ -84,8 +85,13 @@ def delete_post(request, post_id):
 
 @login_required
 def hello_user(request):
-    posts = Post.objects.filter(member=request.user).order_by('-timeStamp').prefetch_related('comments')
-    return render(request, 'hello_user.html', {'posts': posts, 'username': request.user.username})
+    posts = Post.objects.filter(member=request.user).order_by('-timeStamp')
+    return render(request, 'hello_user.html', {
+        'user': request.user,
+        'posts': posts,
+        'is_admin': request.user.is_staff  # Add this line
+    })
+
 
 @login_required
 def my_posts_view(request):
@@ -182,26 +188,27 @@ def delete_comment(request, comment_id):
 def all_posts_view(request):
     category_filter = request.GET.get('category')
     search_query = request.GET.get('search')
- 
+
     posts = Post.objects.filter(status='approved').order_by('-timeStamp')
- 
+
     if category_filter:
         posts = posts.filter(categoryId__name=category_filter)
- 
+
     if search_query:
         posts = posts.filter(Q(content__icontains=search_query) | Q(categoryId__name__icontains=search_query))
- 
+
     # Calculate trending categories
     trending_categories = Post.objects.filter(status='approved').values('categoryId__name').annotate(
         num_posts=Count('postId'),
         num_comments=Count('comments'),
         unique_commenters=Count('comments__member', distinct=True)
     ).order_by('-num_posts', '-num_comments', '-unique_commenters')[:5]  # Get top 5 trending categories
- 
+
     return render(request, 'all_posts.html', {
         'posts': posts,
         'trending_categories': trending_categories,
-        'username': request.user.username
+        'username': request.user.username,
+        'is_admin': request.user.is_staff  # Add this line
     })
 
 #@login_required
@@ -209,7 +216,6 @@ def all_posts_view(request):
     #notifications = Notification.objects.filter(recipient=request.user)
     #return render(request, 'notifications.html', {'notifications': notifications})
 
-# cituconnect/myapp/views.py
 @login_required
 def notifications_view(request):
     today = timezone.now().date()
@@ -230,7 +236,8 @@ def notifications_view(request):
     return render(request, 'notifications.html', {
         'unread_recent_notifications': unread_recent_notifications,
         'read_recent_notifications': read_recent_notifications,
-        'older_notifications': older_notifications
+        'older_notifications': older_notifications,
+        'is_admin': request.user.is_staff  # Add this line
     })
 
 @csrf_exempt
@@ -307,7 +314,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 
-# cituconnect/myapp/views.py
 @login_required
 def profile_settings(request):
     user = request.user
@@ -323,4 +329,8 @@ def profile_settings(request):
             return redirect('hello_user')  # Redirect to a page that shows the updated profile
     else:
         form = UserProfileForm(instance=user)
-    return render(request, 'profile_settings.html', {'form': form})
+    return render(request, 'profile_settings.html', {
+        'form': form,
+        'user': request.user,
+        'is_admin': request.user.is_staff  # Add this line
+    })

@@ -1,4 +1,4 @@
-{% load static %}
+{{% load static %}
 {% load custom_tags %}
 
 <div class="sidebar fixed-sidebar">
@@ -7,18 +7,24 @@
         <br>
         <h2>CITU <br>CONNECT</h2>
     </div>
-    <div class="nav-item"><a href="{% url 'all_posts' %}" class="nav-link">Home</a></div>
-    <div class="nav-item"><a href="{% url 'hello_user' %}" class="nav-link">My Posts</a></div>
-    <div class="nav-item"><a href="{% url 'profile_settings' %}" class="nav-link">Profile Settings</a></div>
-    <div class="nav-item">
-        <a href="{% url 'notifications' %}" class="nav-link">Notifications</a>
-        {% unread_notifications_count request.user as unread_count %}
-        {% if unread_count > 0 %}
-            <span class="notification-count">{{ unread_count }}</span>
-        {% endif %}
-    </div>
-    <div class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link">Logout</a></div>
+    {% if is_admin %}
+        <div class="nav-item"><a href="{% url 'custom_admin_dashboard' %}" class="nav-link">Admin Dashboard</a></div>
+        <div class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link">Logout</a></div>
+    {% else %}
+        <div class="nav-item"><a href="{% url 'all_posts' %}" class="nav-link">Home</a></div>
+        <div class="nav-item"><a href="{% url 'hello_user' %}" class="nav-link">My Posts</a></div>
+        <div class="nav-item"><a href="{% url 'profile_settings' %}" class="nav-link">Profile Settings</a></div>
+        <div class="nav-item">
+            <a href="{% url 'notifications' %}" class="nav-link">Notifications</a>
+            {% unread_notifications_count request.user as unread_count %}
+            {% if unread_count > 0 %}
+                <span class="notification-count">{{ unread_count }}</span>
+            {% endif %}
+        </div>
+        <div class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link">Logout</a></div>
+    {% endif %}
 </div>
+
 
 <style>
 .sidebar {
@@ -49,28 +55,60 @@ h2 {
 .nav-item {
     margin-bottom: 20px; /* Increased spacing between nav items */
     text-align: center; /* Center the nav items */
+    position: relative; /* Required for the notification count positioning */
 }
 
 .nav-link {
     display: block;
-    padding: 15px 20px; /* Increased padding for bigger nav links */
+    padding: 10px 15px; /* Reduced padding for smaller nav links */
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
     font-size: 18px; /* Increased font size */
-    transition: background-color 0.3s ease;
+    position: relative; /* Required for the pseudo-element */
+    transition: color 0.3s ease, box-shadow 0.3s ease;
     width: 100%; /* Make nav links fit the sidebar container */
     box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
-.nav-link:hover {
-    background-color: #901313;
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: -15px; /* Adjust to make the shadow appear outside */
+    left: -15px; /* Adjust to make the shadow appear outside */
+    right: -15px; /* Adjust to make the shadow appear outside */
+    bottom: -15px; /* Adjust to make the shadow appear outside */
+    border-radius: 10px; /* Adjust to match the nav-link border-radius */
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* Initial shadow */
+    transition: box-shadow 0.3s ease;
 }
 
+.nav-link:hover::before {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
 
+.nav-link:hover {
+    color: #ffd700; /* Change text color on hover */
+}
+
+.logout-link::before {
+    content: '';
+    position: absolute;
+    top: -15px; /* Adjust to make the shadow appear outside */
+    left: -15px; /* Adjust to make the shadow appear outside */
+    right: -15px; /* Adjust to make the shadow appear outside */
+    bottom: -15px; /* Adjust to make the shadow appear outside */
+    border-radius: 10px; /* Adjust to match the nav-link border-radius */
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* Initial shadow */
+    transition: box-shadow 0.3s ease;
+}
+
+.logout-link:hover::before {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
 
 .logout-link:hover {
-    background-color: #901313;
+    color: #ffd700; /* Change text color on hover */
 }
 
 .notification-count {
@@ -79,6 +117,9 @@ h2 {
     border-radius: 50%;
     padding: 5px 10px;
     font-weight: bold;
-    margin-left: 10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
 }
 </style>

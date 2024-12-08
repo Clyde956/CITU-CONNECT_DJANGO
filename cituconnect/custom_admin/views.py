@@ -23,7 +23,9 @@ def update_post_status(request, post_id):
         status = data.get('status')
         if status in ['approved', 'rejected']:
             post.status = status
+            post.approvedBy = request.user.username  # Set the approvedBy attribute to the admin's username
             post.save()
             return JsonResponse({'status': 'success'})
         return JsonResponse({'status': 'error', 'message': 'Invalid status'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
