@@ -67,7 +67,7 @@ def success(request):
 def update_post(request, post_id):
     post = get_object_or_404(Post, postId=post_id, member=request.user)
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, request.FILES, instance=post)  # Ensure request.FILES is included
         if form.is_valid():
             form.save()
             return redirect('hello_user')
