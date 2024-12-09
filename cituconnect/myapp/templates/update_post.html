@@ -1,8 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Update Post</title>
     <style>
+        /* Your existing CSS styles */
         * {
             margin: 0;
             padding: 0;
@@ -139,7 +141,7 @@
 <body>
     <div class="form-container">
         <div class="header">
-            <div class="header-avatar"></div>
+            <img src="{% static 'images\CITU_CONNECT_LOGO.png' %}" alt="Logo" class="header-avatar">  <!-- Replace with the path to your logo -->
             <div class="header-text">
                 <h1>Update Post</h1>
                 <p>Please update the following form with your post details. We will review your request and follow up as soon as possible</p>
@@ -148,7 +150,7 @@
 
         <div class="form-content">
             <div class="form-card">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">  <!-- Add enctype attribute -->
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="content">Content</label>
@@ -163,6 +165,11 @@
                     <div class="form-group">
                         <label for="category">Category</label>
                         {{ form.categoryId }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Image</label>  <!-- Add image field -->
+                        {{ form.image }}
                     </div>
 
                     <div class="anonymous-check">
