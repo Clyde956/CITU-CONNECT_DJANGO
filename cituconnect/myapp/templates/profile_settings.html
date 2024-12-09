@@ -128,23 +128,23 @@
             font-size: 14px;
         }
 
-    .password-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    }
+        .password-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        }
 
-    .password-container input {
-    flex: 1;
-    }
+        .password-container input {
+        flex: 1;
+        }
 
-    .password-container .toggle-password {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-    color: black;
-    margin-top: 12px;
-    }
+        .password-container .toggle-password {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        color: black;
+        margin-top: 12px;
+        }
 
         .form-group.full-width {
             grid-column: span 2;
@@ -163,6 +163,23 @@
             .card {
                 padding: 20px;
             }
+        }
+
+        input[type="file"] {
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            background-color: maroon;
+            color: yellow;
+            font-weight: bold;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
         }
     </style>
     <script>
