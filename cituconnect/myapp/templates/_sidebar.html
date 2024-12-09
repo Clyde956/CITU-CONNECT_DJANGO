@@ -8,6 +8,7 @@
         <h2>CITU <br>CONNECT</h2>
     </div>
     {% if is_admin %}
+        <div class="nav-item"><a href="{% url 'all_posts' %}" class="nav-link">Home</a></div>
         <div class="nav-item"><a href="{% url 'custom_admin_dashboard' %}" class="nav-link">Admin Dashboard</a></div>
         <div class="nav-item"><a href="{% url 'logout' %}" class="nav-link logout-link">Logout</a></div>
     {% else %}
@@ -25,14 +26,12 @@
     {% endif %}
 </div>
 
-
 <style>
 .sidebar {
     width: 250px;
     padding: 20px;
     background-color: #901313;
     color: #fff;
-    box-shadow: 2px 0 5px rgba(175, 16, 16, 0.767);
 }
 
 .logo-section {

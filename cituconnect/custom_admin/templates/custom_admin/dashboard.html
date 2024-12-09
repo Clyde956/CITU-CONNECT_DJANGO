@@ -10,7 +10,7 @@
       justify-content: space-between;
       margin-top: 20px;
   }
-e
+
   .modal-buttons button {
       padding: 10px 20px;
       border: none;
@@ -18,6 +18,26 @@ e
       font-size: 16px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .modal-content {
+    padding: 20px;
+    position: absolute;
+    top: 20%; /* Center vertically */
+    right: 0; /* Align to the right */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    max-width: 30%;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+  .modal-content img {
+    max-width: 50%; /* Scale down the image to 50% of the modal width */
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
   }
 
   #approveButton {
@@ -38,21 +58,6 @@ e
   #rejectButton:hover {
       background-color: #c82333;
       transform: scale(1.05);
-  }
-
-  .modal-content {
-      padding: 20px;
-      border-radius: 10px;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  .modal-content h2 {
-      margin-bottom: 20px;
-  }
-
-  .modal-content p {
-      margin-bottom: 10px;
   }
 
   .close {
@@ -82,7 +87,7 @@ e
         </div>
         {% for post in posts %}
             {% if post.status == "pending" %}
-                <div class="row" onclick="showModal(this)" data-post-id="{{ post.postId }}" data-username="{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}" data-content="{{ post.content }}" data-priority="{{ post.priorityLevel }}" data-date="{{ post.timeStamp }}" data-status="{{ post.status }}">
+                <div class="row" onclick="showModal(this)" data-post-id="{{ post.postId }}" data-username="{% if post.isAnonymous %}Anonymous{% else %}{{ post.member.username }}{% endif %}" data-content="{{ post.content }}" data-priority="{{ post.priorityLevel }}" data-date="{{ post.timeStamp }}" data-status="{{ post.status }}" data-image-url="{% if post.image %}{{ post.image.url }}{% endif %}">
                     <div class="user-info">
                         {% if post.isAnonymous %}
                             <img src="{% static 'images/anonymous_avatar.jpg' %}" class="avatar" alt="Anonymous avatar">
@@ -124,9 +129,10 @@ function showModal(element) {
   const priority = element.getAttribute('data-priority');
   const dateSubmitted = element.getAttribute('data-date');
   const status = element.getAttribute('data-status');
+  const imageUrl = element.getAttribute('data-image-url');
 
   // Populate modal with post details
-  document.getElementById('modalDetails').innerHTML = `
+  let modalContent = `
     <h2>Post Details</h2>
     <p><strong>Username:</strong> ${username}</p>
     <p><strong>Content:</strong> ${content}</p>
@@ -135,6 +141,13 @@ function showModal(element) {
     <p><strong>Status:</strong> ${status}</p>
     <input type="hidden" id="postId" value="${postId}">
   `;
+
+  // Add image to modal content if it exists
+  if (imageUrl) {
+    modalContent += `<p><strong>Image attached:</strong></p><img src="${imageUrl}" alt="Post Image" style="max-width: 50%; height: auto; border-radius: 10px;">`;
+  }
+
+  document.getElementById('modalDetails').innerHTML = modalContent;
 
   // Show the modal
   document.getElementById('myModal').style.display = 'block';
@@ -197,4 +210,3 @@ document.getElementById('rejectButton').addEventListener('click', function() {
 </script>
 </body>
 </html>
-
